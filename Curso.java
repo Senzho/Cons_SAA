@@ -1,18 +1,22 @@
 package LogicaNegocio;
 
+import java.util.ArrayList;
+
 public class Curso {
     private int idCurso;
     private int capacidadCupo;
     private String nombreCurso;
     private int nrc;
     private String periodo;
+    private ArrayList<Modulo> modulos;
 
-    public Curso(int idCurso, int capacidadCupo, String nombreCurso, int nrc, String periodo) {
+    public Curso(int idCurso, int capacidadCupo, String nombreCurso, int nrc, String periodo, ArrayList<Modulo> modulos) {
         this.idCurso = idCurso;
         this.capacidadCupo = capacidadCupo;
         this.nombreCurso = nombreCurso;
         this.nrc = nrc;
         this.periodo = periodo;
+        this.modulos = modulos;
     }
     public int getIdCurso() {
         return idCurso;
@@ -43,5 +47,8 @@ public class Curso {
     }
     public void setPeriodo(String periodo) {
         this.periodo = periodo;
+    }
+    public ArrayList<Modulo> getModulos() {
+        return modulos;
     }
 }

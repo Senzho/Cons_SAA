@@ -7,15 +7,13 @@ public class Actividad {
     private int idActividad;
     private int codigoActividad;
     private Date fechaActividad;
-    private int modulo;
     private String nombreActividad;
     private ArrayList<Evidencia> listaEvidencias;
 
-    public Actividad(int idActividad, int codigoActividad, Date fechaActividad, int modulo, String nombreActividad, ArrayList<Evidencia> listaEvidencias) {
+    public Actividad(int idActividad, int codigoActividad, Date fechaActividad, String nombreActividad, ArrayList<Evidencia> listaEvidencias) {
         this.idActividad = idActividad;
         this.codigoActividad = codigoActividad;
         this.fechaActividad = fechaActividad;
-        this.modulo = modulo;
         this.nombreActividad = nombreActividad;
         this.listaEvidencias = listaEvidencias;
     }
@@ -36,12 +34,6 @@ public class Actividad {
     }
     public void setFechaActividad(Date fechaActividad) {
         this.fechaActividad = fechaActividad;
-    }
-    public int getModulo() {
-        return modulo;
-    }
-    public void setModulo(int modulo) {
-        this.modulo = modulo;
     }
     public String getNombreActividad() {
         return nombreActividad;

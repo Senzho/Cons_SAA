@@ -1,16 +1,21 @@
 package LogicaNegocio;
 
 public class Asesor {
-    private String numeropersonal;
+    private String numeroPersonal;
+    private String nombre;
     private String idioma;
 
-    public Asesor(String numeropersonal, String idioma) {
-        this.numeropersonal = numeropersonal;
+    public Asesor(String numeropersonal, String nombre, String idioma) {
+        this.numeroPersonal = numeropersonal;
+        this.nombre = nombre;
         this.idioma = idioma;
     }
 
-    public String getNumeropersonal() {
-        return numeropersonal;
+    public String getNumeroPersonal() {
+        return numeroPersonal;
+    }
+    public String getNombre(){
+        return nombre;
     }
     public String getIdioma() {
         return idioma;
