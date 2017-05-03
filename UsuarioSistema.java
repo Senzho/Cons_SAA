@@ -1,4 +1,4 @@
-package LogicaNegocio;
+package LogicaNegocio.Entidades;
 
 public class UsuarioSistema {
     private int id;

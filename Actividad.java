@@ -1,18 +1,16 @@
-package LogicaNegocio;
+package LogicaNegocio.Entidades;
 
 import java.util.Date;
 import java.util.ArrayList;
 
 public class Actividad {
     private int idActividad;
-    private int codigoActividad;
     private Date fechaActividad;
     private String nombreActividad;
     private ArrayList<Evidencia> listaEvidencias;
 
-    public Actividad(int idActividad, int codigoActividad, Date fechaActividad, String nombreActividad, ArrayList<Evidencia> listaEvidencias) {
+    public Actividad(int idActividad, Date fechaActividad, String nombreActividad, ArrayList<Evidencia> listaEvidencias) {
         this.idActividad = idActividad;
-        this.codigoActividad = codigoActividad;
         this.fechaActividad = fechaActividad;
         this.nombreActividad = nombreActividad;
         this.listaEvidencias = listaEvidencias;
@@ -22,12 +20,6 @@ public class Actividad {
     }
     public void setIdActividad(int idActividad) {
         this.idActividad = idActividad;
-    }
-    public int getCodigoActividad() {
-        return codigoActividad;
-    }
-    public void setCodigoActividad(int codigoActividad) {
-        this.codigoActividad = codigoActividad;
     }
     public Date getFechaActividad() {
         return fechaActividad;

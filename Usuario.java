@@ -1,37 +1,25 @@
-package LogicaNegocio;
+package LogicaNegocio.Entidades;
 
 import java.util.ArrayList;
 
 public class Usuario {
     private String matricula;
-    private int calificacionFinal;
-    private int estadoInscripcion;
     private String nombre;
-    private ArrayList<Curso> cursos;
+    private ArrayList<Inscripcion> inscripciones;
 
-    public Usuario(String matricula, int estadoInscripcion, String nombre, ArrayList<Curso> cursos) {
+    public Usuario(String matricula, int estadoInscripcion, String nombre, ArrayList<Inscripcion> inscripciones) {
         this.matricula = matricula;
-        this.estadoInscripcion = estadoInscripcion;
         this.nombre = nombre;
-        this.cursos = cursos;
+        this.inscripciones = inscripciones;
     }
 
     public String getMatricula() {
         return matricula;
     }
-    public int getCalificacionFinal() {
-        return calificacionFinal;
-    }
-    public int getEstadoInscripcion() {
-        return estadoInscripcion;
-    }
     public String getNombre() {
         return nombre;
     }
-    public ArrayList<Curso> getCursos() {
-        return cursos;
-    }
-    public void setCalificacionFinal(int calificacionFinal){
-        this.calificacionFinal = calificacionFinal;
+    public ArrayList<Inscripcion> getInscripciones() {
+        return inscripciones;
     }
 }

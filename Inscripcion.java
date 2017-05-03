@@ -1,4 +1,4 @@
-package LogicaNegocio;
+package LogicaNegocio.Entidades;
 
 import java.util.ArrayList;
 

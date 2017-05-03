@@ -1,4 +1,4 @@
-package LogicaNegocio;
+package LogicaNegocio.Entidades;
 
 public class Asesor {
     private String numeroPersonal;
