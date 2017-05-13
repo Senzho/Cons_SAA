@@ -49,7 +49,7 @@ public class ActividadDAOSql implements ActividadDAO{
             if (resultadoConsulta.first()){
                 Date fecha = resultadoConsulta.getDate(2);
                 String nombre = resultadoConsulta.getString(3);
-                actividad = new Actividad(idActividad, fecha, nombre, null);
+                actividad = new Actividad(idActividad, fecha, nombre);
             }else{
                 Logger logger = Logger.getLogger("Logger");
                 logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");
@@ -77,7 +77,7 @@ public class ActividadDAOSql implements ActividadDAO{
                 int idActividad = resultadoConsulta.getInt(1);
                 Date fecha = resultadoConsulta.getDate(2);
                 String nombre = resultadoConsulta.getString(3);
-                actividades.add(new Actividad(idActividad,  fecha, nombre, null));
+                actividades.add(new Actividad(idActividad,  fecha, nombre));
             }
         }catch(SQLException | NullPointerException excepcion){
             Logger logger = Logger.getLogger("Logger");
@@ -104,6 +104,7 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.execute();
             registroExitoso = true;
         }catch(SQLException | NullPointerException excepcion){
+            System.out.println(excepcion.getMessage());
             Logger logger = Logger.getLogger("Logger");
             logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
         }finally{

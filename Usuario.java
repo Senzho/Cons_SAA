@@ -7,7 +7,7 @@ public class Usuario {
     private String nombre;
     private ArrayList<Inscripcion> inscripciones;
 
-    public Usuario(String matricula, int estadoInscripcion, String nombre, ArrayList<Inscripcion> inscripciones) {
+    public Usuario(String matricula, String nombre, ArrayList<Inscripcion> inscripciones) {
         this.matricula = matricula;
         this.nombre = nombre;
         this.inscripciones = inscripciones;

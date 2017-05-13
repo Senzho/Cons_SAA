@@ -29,7 +29,7 @@ public class InscripcionDAOSql implements InscripcionDAO {
                 int nrc = resultadoConsulta.getInt(6);
                 CursoDAOSql cursoDAO = new CursoDAOSql();
                 Curso curso = cursoDAO.getCurso(nrc);
-                listaInscripciones.add(new Inscripcion(idInscripcion, estadoInscripcion, numeroInscripcion, calificacionFinal,curso));
+                listaInscripciones.add(new Inscripcion(idInscripcion, estadoInscripcion, numeroInscripcion, calificacionFinal, curso));
             }
         }catch(SQLException | NullPointerException excepcion){
             Logger logger = Logger.getLogger("Logger");

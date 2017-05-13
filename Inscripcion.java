@@ -8,15 +8,13 @@ public class Inscripcion {
     private int numeroInscripcion;
     private int calificacionFinal;
     private Curso curso;
-    private ArrayList<Actividad> listaActividades;
 
-    public Inscripcion(int idInscripcion, int estadoInscripcion, int numeroInscripcion, int calificacionFinal, Curso curso, ArrayList<Actividad> listaActividades) {
+    public Inscripcion(int idInscripcion, int estadoInscripcion, int numeroInscripcion, int calificacionFinal, Curso curso) {
         this.idInscripcion = idInscripcion;
         this.estadoInscripcion = estadoInscripcion;
         this.numeroInscripcion = numeroInscripcion;
         this.calificacionFinal = calificacionFinal;
         this.curso = curso;
-        this.listaActividades = listaActividades;
     }
     public int getIdInscripcion() {
         return idInscripcion;
@@ -47,11 +45,5 @@ public class Inscripcion {
     }
     public void setCurso(Curso curso) {
         this.curso = curso;
-    }
-    public ArrayList<Actividad> getListaActividades() {
-        return listaActividades;
-    }
-    public void setListaActividades(ArrayList<Actividad> listaActividades) {
-        this.listaActividades = listaActividades;
     }
 }

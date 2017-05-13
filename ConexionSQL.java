@@ -15,7 +15,7 @@ public class ConexionSQL {
     public void crearConexion(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            conexion=DriverManager.getConnection("jdbc:mysql://localhost/CentroAutoAccesoSSA?user=root&password=123456");
+            conexion=DriverManager.getConnection("jdbc:mysql://localhost/SistemaAA?user=root&password=snape");
         }catch(ClassNotFoundException | SQLException excepcion){
             Logger logger = Logger.getLogger("Logger");
             logger.log(Level.SEVERE, "No se encuentra la clase | no se puedo acceder a la base "
