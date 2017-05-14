@@ -127,4 +127,63 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return registroExitoso;
     }
+    @Override
+    public boolean agregarActividad(Actividad actividad, String numeroPersonal){
+        boolean registroExitoso = false;
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("insert into actividad (idActividad, nombreActividad, fechaInicio,fechaFin"
+                    + ", cupo, seccion, modulo, numeroPersonal, idExperiencia) values (?, ?, ?, ?, ?, ?,?,?,?)");
+            orden.setInt(1, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.setString(2, actividad.getDatosActividad().getNombreActividad());
+            orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
+            orden.setDate(4, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaFin().toString()));
+            orden.setString(5, actividad.getDatosActividad().getCupo());
+            orden.setInt(6, actividad.getDatosExperiencia().getSeccion());
+            orden.setInt(7, actividad.getDatosExperiencia().getModulo());
+            orden.setString(8, numeroPersonal);
+            orden.setInt(9, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.execute();
+            registroExitoso = true;
+        }catch(SQLException | NullPointerException excepcion){
+            System.out.println(excepcion.getMessage());
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }finally{
+            conexionSql.cerrarConexion();
+        }
+        return registroExitoso;
+    }
+    @Override
+    public ArrayList<Actividad> getListaActividades(){
+        ArrayList<Actividad> listaActividades = new ArrayList<>();
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select * from actividad");
+            ResultSet resultadoConsulta = orden.executeQuery();
+            while (resultadoConsulta.next()){
+                int idActividad = resultadoConsulta.getInt(1);
+                String nombreActividad = resultadoConsulta.getString(2);
+                Date fechaInicio = resultadoConsulta.getDate(3);
+                Date fechaFin = resultadoConsulta.getDate(4);
+                String cupo = resultadoConsulta.getString(5);
+                int seccion = resultadoConsulta.getInt(6);
+                int modulo = resultadoConsulta.getInt(7);
+                String numeroPersonal = resultadoConsulta.getString(8) ;
+                int idExperiencia = resultadoConsulta.getInt(9);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                Actividad actividad = new Actividad(datosActividad, datosExperiencia);
+                listaActividades.add(actividad);
+            }
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }finally{
+            conexionSql.cerrarConexion();
+        }
+        return listaActividades;
+    }
 }

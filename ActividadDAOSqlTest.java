@@ -51,4 +51,16 @@ public class ActividadDAOSqlTest {
         int longitud = 0;
         assertNotEquals(actividadDao.getListaActividades(1000, 1, 1), longitud);
     }
+    @Test
+    public void testAgregarActividad() {
+        boolean esperado = true;
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        assertEquals(actividadDao.registrarActividad(actividad, idInscripcion, numeroPersonal), esperado);
+    }
+    @Test
+    public void testGetListaActividades(){
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        int longitud = 0;
+        assertNotEquals(actividadDao.getListaActividadesRegistradas(1).size(), longitud);
+    }
 }
