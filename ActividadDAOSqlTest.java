@@ -35,7 +35,7 @@ public class ActividadDAOSqlTest {
     public void testGetActividadEquals(){
         ActividadDAOSql actividadDao = new ActividadDAOSql();
         int idActividad = 1;
-        assertEquals(actividadDao.getActividad(idActividad).getIdActividad(), idActividad);
+        assertEquals(actividadDao.getActividad(idActividad).getDatosActividad().getIdActividad(), idActividad);
     }
     
     @Test

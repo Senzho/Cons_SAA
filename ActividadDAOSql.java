@@ -3,6 +3,8 @@ package LogicaNegocio.DAO;
 import AccesoDatos.ConexionSQL;
 import LogicaNegocio.Entidades.Actividad;
 import LogicaNegocio.Entidades.ActividadRegistrada;
+import LogicaNegocio.Entidades.DatosActividad;
+import LogicaNegocio.Entidades.DatosExperiencia;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,9 +49,16 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.setInt(1, idActividad);
             ResultSet resultadoConsulta = orden.executeQuery();
             if (resultadoConsulta.first()){
-                Date fecha = resultadoConsulta.getDate(2);
-                String nombre = resultadoConsulta.getString(3);
-                actividad = new Actividad(idActividad, fecha, nombre);
+                String nombreActividad = resultadoConsulta.getString(2);
+                Date fechaInicio = resultadoConsulta.getDate(3);
+                Date fechaFin = resultadoConsulta.getDate(4);
+                String cupo = resultadoConsulta.getString(5);
+                int seccion = resultadoConsulta.getInt(6);
+                int modulo = resultadoConsulta.getInt(7);
+                int idExperiencia = resultadoConsulta.getInt(9);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                actividad = new Actividad(datosActividad, datosExperiencia);
             }else{
                 Logger logger = Logger.getLogger("Logger");
                 logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");
@@ -75,9 +84,15 @@ public class ActividadDAOSql implements ActividadDAO{
             ResultSet resultadoConsulta = orden.executeQuery();
             while (resultadoConsulta.next()){
                 int idActividad = resultadoConsulta.getInt(1);
-                Date fecha = resultadoConsulta.getDate(2);
-                String nombre = resultadoConsulta.getString(3);
-                actividades.add(new Actividad(idActividad,  fecha, nombre));
+                String nombreActividad = resultadoConsulta.getString(2);
+                Date fechaInicio = resultadoConsulta.getDate(3);
+                Date fechaFin = resultadoConsulta.getDate(4);
+                String cupo = resultadoConsulta.getString(5);
+                int idExperiencia = resultadoConsulta.getInt(9);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                Actividad actividad = new Actividad(datosActividad, datosExperiencia);
+                actividades.add(actividad);
             }
         }catch(SQLException | NullPointerException excepcion){
             Logger logger = Logger.getLogger("Logger");
