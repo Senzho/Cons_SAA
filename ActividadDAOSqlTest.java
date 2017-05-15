@@ -1,6 +1,9 @@
 package LogicaNegocio.DAO;
 
+import LogicaNegocio.Entidades.Actividad;
 import LogicaNegocio.Entidades.ActividadRegistrada;
+import LogicaNegocio.Entidades.DatosActividad;
+import LogicaNegocio.Entidades.DatosExperiencia;
 import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -9,58 +12,69 @@ public class ActividadDAOSqlTest {
     private ActividadRegistrada actividad;
     private int idInscripcion;
     private String numeroPersonal;
+    private ActividadDAOSql actividadDao;
+    private int idActividad;
     
     public ActividadDAOSqlTest() {
         Date fecha = java.sql.Date.valueOf("2017-03-05");
         actividad = new ActividadRegistrada(25, fecha, "Faltan horas de estudio", 1);
         idInscripcion = 1;
+        idActividad = 1;
         numeroPersonal = "SH67GV";
-    }
-
-    @Test
-    public void testRegistrarActividad() {
-        boolean esperado = true;
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
-        assertEquals(actividadDao.registrarActividad(actividad, idInscripcion, numeroPersonal), esperado);
+        actividadDao = new ActividadDAOSql();
     }
     
+    @Test
+    public void testAgregarActividad() {
+        boolean esperado = true;
+        Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
+        Date fechaFin = java.sql.Date.valueOf("2017-04-07");
+        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20));
+        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
+        Actividad actividad = new Actividad(datosActividad, datosExperiencia);
+        assertEquals(actividadDao.agregarActividad(actividad, numeroPersonal), esperado);
+    }
     @Test
     public void testGetActividadNull(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
-        int idActividad = 1;
         assertNotNull(actividadDao.getActividad(idActividad));
     }
-    
     @Test
     public void testGetActividadEquals(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
-        int idActividad = 1;
         assertEquals(actividadDao.getActividad(idActividad).getDatosActividad().getIdActividad(), idActividad);
     }
-    
     @Test
-    public void testListaActividadesRegistradasEquals(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
+    public void testGetListaActividades(){
         int longitud = 0;
-        assertNotEquals(actividadDao.getListaActividadesRegistradas(1).size(), longitud);
+        assertNotEquals(actividadDao.getListaActividades().size(), longitud);
     }
-    
     @Test
-    public void testListaActividadesEquals(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
+    public void testGetListaActividadesEquals(){
         int longitud = 0;
         assertNotEquals(actividadDao.getListaActividades(1000, 1, 1), longitud);
     }
     @Test
-    public void testAgregarActividad() {
+    public void testRegistrarActividad() {
         boolean esperado = true;
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
         assertEquals(actividadDao.registrarActividad(actividad, idInscripcion, numeroPersonal), esperado);
     }
     @Test
-    public void testGetListaActividades(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
+    public void testGetListaActividadesRegistradasEquals(){
         int longitud = 0;
         assertNotEquals(actividadDao.getListaActividadesRegistradas(1).size(), longitud);
+    }
+    @Test
+    public void textActualizarActividad(){
+        boolean esperado = true;
+        Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
+        Date fechaFin = java.sql.Date.valueOf("2017-04-07");
+        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20));
+        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
+        Actividad actividad = new Actividad(datosActividad, datosExperiencia);
+        assertEquals(actividadDao.actiualizarActividad(actividad, numeroPersonal), esperado);
+    }
+    @Test
+    public void testEliminarActividad(){
+        boolean esperado = true;
+        assertEquals(actividadDao.eliminarActividad(1), esperado);
     }
 }
