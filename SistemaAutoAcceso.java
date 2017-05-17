@@ -1,13 +1,11 @@
 package sistemaautoacceso;
 
-import LogicaNegocio.DAO.ActividadDAOSql;
-import LogicaNegocio.Entidades.ActividadRegistrada;
-import java.util.Date;
+import InterfazGrafica.VentanaSeguimiento;
 
 public class SistemaAutoAcceso {
 
     public static void main(String[] args) {
-        
+        new VentanaSeguimiento();
     }
     
 }
