@@ -9,9 +9,9 @@ public class Colores {
     private Color colorLetra;
     
     public Colores(){
-        this.colorBase = new Color(182, 180, 180);
-        this.colorResalte = new Color(155, 155, 155);
-        this.colorPresion = new Color(130, 130, 130);
+        this.colorBase = new Color(223, 223, 223);
+        this.colorResalte = new Color(202, 202, 202);
+        this.colorPresion = new Color(183, 183, 183);
         this.colorLetra = Color.black;
     }
 

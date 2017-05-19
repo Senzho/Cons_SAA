@@ -146,6 +146,7 @@ public class VentanaSeguimiento extends JFrame{
         this.textAreaObservacion.setEditable(false);
         this.textAreaObservacion.setWrapStyleWord(true);
         this.textAreaObservacion.setLineWrap(true);
+        this.textAreaObservacion.setBackground(null);
     }
     public void cargarComboMoulo(){
         for(int i = 1; i<4; i++){

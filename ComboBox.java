@@ -27,13 +27,11 @@ public class ComboBox implements MouseListener{
     
     public ComboBox(Colores colores, ImageIcon icono){
         this.colores=colores;
-        FlowLayout flowCombo = new FlowLayout();
-        flowCombo.setVgap(0);
-        flowCombo.setHgap(0);
-        comboBox = new JPanel(flowCombo);
-        comboBox.setBorder(BorderFactory.createLineBorder(colores.getColorBase()));
+        BorderLayout borderCombo = new BorderLayout();
+        comboBox = new JPanel(borderCombo);
+        comboBox.setBorder(BorderFactory.createLineBorder(colores.getColorResalte()));
         comboBox.setBackground(colores.getColorBase());
-        comboBox.add(texto = new JLabel());
+        comboBox.add(texto = new JLabel(), BorderLayout.CENTER);
         comboBox.addMouseListener(this);
         texto.setOpaque(true);
         texto.setBackground(colores.getColorBase());
@@ -41,7 +39,7 @@ public class ComboBox implements MouseListener{
         texto.setFont(new Font("Arial", Font.PLAIN, 20));
         texto.setName("seleccion");
         texto.addMouseListener(this);
-        comboBox.add(botonCombo = new JLabel());
+        comboBox.add(botonCombo = new JLabel(), BorderLayout.LINE_END);
         botonCombo.setIcon(icono);
         botonCombo.setOpaque(true);
         botonCombo.setBackground(colores.getColorBase());
@@ -55,7 +53,6 @@ public class ComboBox implements MouseListener{
         lista.setBackground(colores.getColorBase());
         menu.setBorder(BorderFactory.createLineBorder(colores.getColorResalte()));
         menu.setBackground(colores.getColorBase());
-        menu.setPopupSize(100, 150);
         visible=false;
         primerElemento=false;
     }
@@ -117,8 +114,9 @@ public class ComboBox implements MouseListener{
             if (isShowed()){
                 hideList();
             }else{
-                int x = this.comboBox.getX();
-                int y = this.comboBox.getY()+ this.comboBox.getHeight();
+                int x = 0;
+                int y = this.comboBox.getHeight();
+                this.menu.setPopupSize(this.comboBox.getWidth(), 150);
                 showList(x, y);
             }
         }else if(evento.getSource() instanceof JLabel){
