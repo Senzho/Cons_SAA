@@ -28,8 +28,9 @@ public class VentanaSeguimiento extends JFrame{
     public VentanaSeguimiento(){
         this.inicializarComponentes();
         this.establecerPropiedades();
-        this.cargarComboMoulo();
-        this.cargarComboSeccion();
+        CombosModuloSeccion combos = new CombosModuloSeccion();
+        combos.cargarComboMoulo(this.comboModulo);
+        combos.cargarComboSeccion(this.comboSeccion);
         setTitle("Seguimiento");
         setSize(730,480);
         setLocationRelativeTo(null);
@@ -147,15 +148,5 @@ public class VentanaSeguimiento extends JFrame{
         this.textAreaObservacion.setWrapStyleWord(true);
         this.textAreaObservacion.setLineWrap(true);
         this.textAreaObservacion.setBackground(null);
-    }
-    public void cargarComboMoulo(){
-        for(int i = 1; i<4; i++){
-            this.comboModulo.addString(""+i);
-        }
-    }
-    public void cargarComboSeccion(){
-        for(int i = 1; i<5; i++){
-            this.comboSeccion.addString(""+i);
-        }
     }
 }

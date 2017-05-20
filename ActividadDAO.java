@@ -13,5 +13,9 @@ public interface ActividadDAO {
     public ArrayList<ActividadRegistrada> getListaActividadesRegistradas(int idInscripcion);
     public boolean actiualizarActividad(Actividad actividad, String numeroPersonal);
     public boolean eliminarActividad(int idActividad);
+<<<<<<< HEAD
     public int getIdActividad(String nombreActividad);
+=======
+    public int getUltimoIdActividad();
+>>>>>>> origin/master
 }

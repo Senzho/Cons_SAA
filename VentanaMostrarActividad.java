@@ -18,15 +18,17 @@ public class VentanaMostrarActividad extends JFrame{
     private JPanel panelBotones;
     private JScrollPane scrollActividades;
     private JPanel panelActividades;
+    
     public VentanaMostrarActividad(){
+        this.inicializarComponentes();
+        this.agregarComponentes();
         setSize(730,480);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Calendario de actividades");
         setVisible(true);
-        this.inicializarComponentes();
-        this.agregarComponentes();
     }
+    
     public void inicializarComponentes(){
         btnEditar = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoEditarOscuro.png")), "Editar");
         btnAgregar = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoMasOscuro.png")), "Agregar");
@@ -40,7 +42,10 @@ public class VentanaMostrarActividad extends JFrame{
     public void agregarComponentes(){
         add(panelPrincipal);
         panelPrincipal.setLayout(new BorderLayout());
-        panelBotones.setLayout(new FlowLayout());
+        FlowLayout flowBotones = new FlowLayout();
+        flowBotones.setVgap(0);
+        flowBotones.setHgap(0);
+        panelBotones.setLayout(flowBotones);
         panelBotones.add(btnEditar.getButton());
         panelBotones.add(btnAgregar.getButton());
         panelBotones.add(btnEliminar.getButton());
