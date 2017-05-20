@@ -23,7 +23,7 @@ public class ActividadDAOSql implements ActividadDAO{
         try{
             PreparedStatement orden = conexion.prepareStatement("insert into actividad (idActividad, nombreActividad, fechaInicio,fechaFin"
                     + ", cupo, seccion, modulo, numeroPersonal, idExperiencia) values (?, ?, ?, ?, ?, ?,?,?,?)");
-            orden.setInt(1, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.setInt(1, actividad.getDatosActividad().getIdActividad());
             orden.setString(2, actividad.getDatosActividad().getNombreActividad());
             orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
             orden.setDate(4, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaFin().toString()));
@@ -35,7 +35,6 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.execute();
             registroExitoso = true;
         }catch(SQLException | NullPointerException excepcion){
-            System.out.println(excepcion.getMessage());
             Logger logger = Logger.getLogger("Logger");
             logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
         }finally{
@@ -226,5 +225,26 @@ public class ActividadDAOSql implements ActividadDAO{
             conexionSql.cerrarConexion();
         }
         return eliminada;
+    }
+    @Override
+    public int getUltimoIdActividad() {
+        int ultimoId = 0;
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select idActividad from actividad");
+            ResultSet resultadoConsulta = orden.executeQuery();
+            if (resultadoConsulta.last()){
+                ultimoId = resultadoConsulta.getInt(1)+1;
+            }else{
+                ultimoId = 1;
+            }
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }finally{
+            conexionSql.cerrarConexion();
+        }
+        return ultimoId;
     }
 }
