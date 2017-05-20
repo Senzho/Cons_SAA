@@ -14,6 +14,7 @@ public class ActividadDAOSqlTest {
     private String numeroPersonal;
     private ActividadDAOSql actividadDao;
     private int idActividad;
+    private String nombreActividad;
     
     public ActividadDAOSqlTest() {
         Date fecha = java.sql.Date.valueOf("2017-03-05");
@@ -21,6 +22,7 @@ public class ActividadDAOSqlTest {
         idInscripcion = 1;
         idActividad = 1;
         numeroPersonal = "SH67GV";
+        nombreActividad = "Conversacion obligatoria 1";
         actividadDao = new ActividadDAOSql();
     }
     
@@ -33,6 +35,10 @@ public class ActividadDAOSqlTest {
         DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
         assertEquals(actividadDao.agregarActividad(actividad, numeroPersonal), esperado);
+    }
+    @Test 
+    public void getIdActividad(){
+        assertEquals(actividadDao.getIdActividad(nombreActividad), idActividad);
     }
     @Test
     public void testGetActividadNull(){

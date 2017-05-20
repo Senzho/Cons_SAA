@@ -3,18 +3,27 @@ package InterfazGrafica;
 import LogicaNegocio.Logica.Button;
 import LogicaNegocio.Logica.Colores;
 import LogicaNegocio.Logica.ComboBox;
+import LogicaNegocio.Logica.CursorListener;
+import LogicaNegocio.DAO.ActividadDAOSql;
+import LogicaNegocio.Entidades.ActividadRegistrada;
+import LogicaNegocio.Entidades.Actividad;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.text.DateFormat;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import java.util.Date;
+import javax.swing.Icon;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
-public class VentanaRegistrarActividad extends JFrame {
+public class VentanaRegistrarActividad extends JFrame implements CursorListener {
     private JPanel panelPrincipal;
     private JPanel panelBotones;
     private JPanel panelObservaciones;
@@ -28,8 +37,16 @@ public class VentanaRegistrarActividad extends JFrame {
     private ComboBox comboPuntaje;
     private JLabel lblFecha;
     private JScrollPane scrollObservacion;
+    private DateFormat formatoFecha;
+    private Date fechaActual;
+    private String numeroPersonal;
+    private int idInscripcion;
+    private int idExperiencia;
     
-    public VentanaRegistrarActividad(){
+    public VentanaRegistrarActividad(String numeroPersonal, int idInscripcion, int idExperiencia){
+        this.numeroPersonal = numeroPersonal;
+        this.idInscripcion = idInscripcion;
+        this.idExperiencia = idExperiencia;
         this.inicializarComponentes();
         this.configurar();
         setTitle("Registrar actividad");
@@ -45,6 +62,7 @@ public class VentanaRegistrarActividad extends JFrame {
         this.cargarComboMoulo();
         this.cargarComboSeccion();
         this.cargarComboPuntaje();
+        this.cargarComboActividad();
     }
     public void inicializarComponentes(){
         panelPrincipal = new JPanel();
@@ -52,7 +70,10 @@ public class VentanaRegistrarActividad extends JFrame {
         panelObservaciones = new JPanel();
         panelAtributos = new JPanel();
         txtObservacion = new JTextArea();
-        lblFecha = new JLabel("12-12-12");
+        DateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaActual = new Date();
+        String fecha = formatoFecha.format(fechaActual);
+        lblFecha = new JLabel(fecha);
         txtObservacion.setWrapStyleWord(true);
         txtObservacion.setLineWrap(true);
         txtObservacion.setBackground(null);
@@ -64,7 +85,7 @@ public class VentanaRegistrarActividad extends JFrame {
         this.comboSeccion = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
         this.comboActividad = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
         this.comboPuntaje = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
-        
+        this.btnRegistrar.addCursorListener(this);
     }
     public void configurarPanelBotones(){
         panelPrincipal.setLayout(new BorderLayout());
@@ -105,7 +126,6 @@ public class VentanaRegistrarActividad extends JFrame {
         panelSegundaFila.setLayout(flowSegundaFila);
         panelSegundaFila.add(new JLabel("Actividad:"));
         panelSegundaFila.add(this.comboActividad.getComboBox());
-        comboActividad.addString("Conversacion obligatoria #6");
         panelAtributos.add(panelSegundaFila);
         /**
          * 
@@ -121,6 +141,16 @@ public class VentanaRegistrarActividad extends JFrame {
         panelAtributos.add(panelTerceraFila);
         this.panelPrincipal.add(panelAtributos, BorderLayout.NORTH);
     }
+    public void cargarComboActividad(){
+       ActividadDAOSql actividadDao = new ActividadDAOSql();
+       int modulo = Integer.parseInt(this.comboModulo.getSelectedItem());
+       int seccion = Integer.parseInt(this.comboSeccion.getSelectedItem());
+       ArrayList<Actividad> listaActividades = actividadDao.getListaActividades(idExperiencia,modulo,seccion);
+       for(int i = 0; i< listaActividades.size(); i++){
+           this.comboActividad.addString(listaActividades.get(i).getDatosActividad().getNombreActividad());
+       }
+    }
+    
     public void cargarComboMoulo(){
         for(int i = 1; i<4; i++){
             this.comboModulo.addString(""+i);
@@ -138,5 +168,19 @@ public class VentanaRegistrarActividad extends JFrame {
     }
     public void agregarEventos(){
     
+    }
+
+    @Override
+    public void cursorClicked(Button boton) {
+        if(boton.equals(btnRegistrar)){
+            ActividadDAOSql actividadDao = new ActividadDAOSql();
+            String nombreActividad = this.comboActividad.getSelectedItem();
+            int porcentaje = Integer.parseInt(this.comboPuntaje.getSelectedItem());
+            Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
+            String observacion = this.txtObservacion.getText();
+            int idActividad = actividadDao.getIdActividad(nombreActividad);
+            ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
+            actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
+        }
     }
 }

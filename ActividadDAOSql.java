@@ -227,4 +227,28 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return eliminada;
     }
+    @Override
+    public int getIdActividad(String nombreActividad){
+        int idActividad = -1;
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select * from actividad where nombreActividad = ?");
+            orden.setString(1, nombreActividad);
+            ResultSet resultadoConsulta = orden.executeQuery();
+            if (resultadoConsulta.first()){
+                idActividad = resultadoConsulta.getInt(1);
+            }else{
+                Logger logger = Logger.getLogger("Logger");
+                logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");
+            }
+            idActividad = resultadoConsulta.getInt(1);
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }finally{
+            conexionSql.cerrarConexion();
+        }
+        return idActividad;
+    }
 }
