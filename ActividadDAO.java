@@ -5,6 +5,7 @@ import LogicaNegocio.Entidades.ActividadRegistrada;
 import java.util.ArrayList;
 
 public interface ActividadDAO {
+    public int getIdActividad(String nombreActividad);
     public boolean agregarActividad(Actividad actividad, String numeroPersonal);
     public Actividad getActividad(int idActividad);
     public ArrayList<Actividad> getListaActividades();
@@ -13,9 +14,5 @@ public interface ActividadDAO {
     public ArrayList<ActividadRegistrada> getListaActividadesRegistradas(int idInscripcion);
     public boolean actiualizarActividad(Actividad actividad, String numeroPersonal);
     public boolean eliminarActividad(int idActividad);
-<<<<<<< HEAD
-    public int getIdActividad(String nombreActividad);
-=======
-    public int getUltimoIdActividad();
->>>>>>> origin/master
+    
 }
