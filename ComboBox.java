@@ -128,7 +128,9 @@ public class ComboBox implements MouseListener{
                 elemento.setBackground(colores.getColorResalte());
                 elementoSeleccionado=elemento.getName();
                 texto.setText(" "+elementoSeleccionado+" ");
-                this.listListener.ItemSelected(this);
+                if (this.listListener!=null){
+                    this.listListener.ItemSelected(this);
+                }
                 hideList();
                 elemento.setBackground(colores.getColorBase());
             }

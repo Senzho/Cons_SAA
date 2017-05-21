@@ -47,7 +47,7 @@ public class ActividadDAOSql implements ActividadDAO{
         try{
             PreparedStatement orden = conexion.prepareStatement("insert into actividad (idActividad, nombreActividad, fechaInicio,fechaFin"
                     + ", cupo, seccion, modulo, numeroPersonal, idExperiencia) values (?, ?, ?, ?, ?, ?,?,?,?)");
-            orden.setInt(1, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.setInt(1, actividad.getDatosActividad().getIdActividad());
             orden.setString(2, actividad.getDatosActividad().getNombreActividad());
             orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
             orden.setDate(4, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaFin().toString()));

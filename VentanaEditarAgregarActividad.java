@@ -44,6 +44,8 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     private ArrayList<ExperienciaEducativa> listaExperiencias;
     private ArrayList<Asesor> listaAsesores;
     
+    private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+    
     public VentanaEditarAgregarActividad(){
         inicializarComponentes();
         establecerPropiedades();
@@ -87,7 +89,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         contantesGrid.gridwidth = 1;
         contantesGrid.fill = GridBagConstraints.NONE;
         panelCentral.add(labelActividad, contantesGrid);
-        this.textoActividad = new JTextField("Actividad");
+        this.textoActividad = new JTextField();
         contantesGrid.gridx = 1;
         contantesGrid.gridwidth = 3;
         contantesGrid.fill = GridBagConstraints.BOTH;
@@ -306,9 +308,8 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     }
     public int getNumeroMes(String mes){
         int numeroMes = 0;
-        String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
         for (int i = 0; i < 12; i++){
-            if (meses[i].equals(mes)){
+            if (this.meses[i].equals(mes)){
                 numeroMes = i+1;
             }
         }

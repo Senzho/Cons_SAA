@@ -76,7 +76,7 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         txtObservacion.setBackground(null);
         txtObservacion.setMargin(new Insets(10, 20, 10, 20));
         this.scrollObservacion = new JScrollPane(txtObservacion);
-        this.btnRegistrar = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoMasOscuro.png")), "Aceptar");
+        this.btnRegistrar = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoMasOscuro.png")), "Registrar");
         this.btnCancelar = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoEliminarOscuro.png")), "Cancelar");
         this.comboModulo = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
         this.comboSeccion = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
