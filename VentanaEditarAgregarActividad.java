@@ -14,6 +14,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.ImageIcon;
@@ -23,7 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class VentanaEditarAgregarActividad extends JFrame implements CursorListener{
+public class VentanaEditarAgregarActividad extends JFrame implements CursorListener, KeyListener{
     private Container contenedor;
     private ComboBox comboExperiencia;
     private JTextField textoActividad;
@@ -45,6 +47,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     private ArrayList<Asesor> listaAsesores;
     
     private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+    private final int LARGO_MAXIMO_ACTIVIDAD = 50;
     
     public VentanaEditarAgregarActividad(){
         inicializarComponentes();
@@ -180,6 +183,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     public void establecerPropiedades(){
         this.botonGuardarAgregar.addCursorListener(this);
         this.botonCancelar.addCursorListener(this);
+        this.textoActividad.addKeyListener(this);
     }
     public void inicializarCombos(){
         this.comboExperiencia = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
@@ -218,9 +222,8 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         }
     }
     public void cargarMeses(ComboBox combo){
-        String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
         for (int c = 0;c < 12; c++){
-            combo.addString(""+meses[c]);
+            combo.addString(""+this.meses[c]);
         }
     }
     public void cargarAnos(ComboBox combo){
@@ -282,29 +285,37 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         return numeroPersonal;
     }
     public void agregarActividad(){
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
-        int idActividad = actividadDao.getUltimoId();
         String nombreActividad = this.textoActividad.getText();
-        String fechaInicio = this.comboInicioAno.getSelectedItem() +"-"+ getNumeroMes(this.comboInicioMes.getSelectedItem()) +"-"+ this.comboInicioDia.getSelectedItem();
-        Date fechaInicioDate = java.sql.Date.valueOf(fechaInicio);
-        String fechaFin = this.comboFinAno.getSelectedItem() +"-"+ getNumeroMes(this.comboFinMes.getSelectedItem()) +"-"+ this.comboFinDia.getSelectedItem();
-        Date fechaFinDate = java.sql.Date.valueOf(fechaFin);
-        String cupo = this.comboCupo.getSelectedItem();
-        String seccion = this.comboSeccion.getSelectedItem();
-        String modulo = this.comboModulo.getSelectedItem();
-        String numeroPersonal = getNumeroPersonal(this.comboAsesor.getSelectedItem());
-        int idExperiencia = getIdExperiencia(this.comboExperiencia.getSelectedItem());
-        DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicioDate, fechaFinDate, cupo);
-        DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, Integer.valueOf(modulo), Integer.valueOf(seccion));
-        Actividad nuevaActividad = new Actividad(datosActividad, datosExperiencia);
-        boolean exito = actividadDao.agregarActividad(nuevaActividad, numeroPersonal);
-        String mensaje = "";
-        if (exito){
-            mensaje = "Actividad agregada satisfactoriamente";
+        String experiencia = this.comboExperiencia.getSelectedItem();
+        String asesor = this.comboAsesor.getSelectedItem();
+        CodigoActividad codigo = validarDatos(nombreActividad, experiencia, asesor);
+        if (codigo.equals(CodigoActividad.datosValidos)){
+            ActividadDAOSql actividadDao = new ActividadDAOSql();
+            int idActividad = actividadDao.getUltimoId();
+            String fechaInicio = this.comboInicioAno.getSelectedItem() +"-"+ getNumeroMes(this.comboInicioMes.getSelectedItem()) +"-"+ this.comboInicioDia.getSelectedItem();
+            Date fechaInicioDate = java.sql.Date.valueOf(fechaInicio);
+            String fechaFin = this.comboFinAno.getSelectedItem() +"-"+ getNumeroMes(this.comboFinMes.getSelectedItem()) +"-"+ this.comboFinDia.getSelectedItem();
+            Date fechaFinDate = java.sql.Date.valueOf(fechaFin);
+            String cupo = this.comboCupo.getSelectedItem();
+            String seccion = this.comboSeccion.getSelectedItem();
+            String modulo = this.comboModulo.getSelectedItem();
+            String numeroPersonal = getNumeroPersonal(asesor);
+            int idExperiencia = getIdExperiencia(experiencia);
+            DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicioDate, fechaFinDate, cupo);
+            DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, Integer.valueOf(modulo), Integer.valueOf(seccion));
+            Actividad nuevaActividad = new Actividad(datosActividad, datosExperiencia);
+            boolean exito = actividadDao.agregarActividad(nuevaActividad, numeroPersonal);
+            String mensaje = "";
+            if (exito){
+                mensaje = "Actividad agregada satisfactoriamente";
+            }else{
+                mensaje = "La actividad no se pudo crear :(";
+            }
+            JOptionPane.showMessageDialog(null, mensaje);
+            dispose();
         }else{
-            mensaje = "La actividad no se pudo crear :(";
+            mostrarMensajeError(codigo);
         }
-        JOptionPane.showMessageDialog(null, mensaje);
     }
     public int getNumeroMes(String mes){
         int numeroMes = 0;
@@ -314,6 +325,59 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             }
         }
         return numeroMes;
+    }
+    public CodigoActividad validarDatos(String nombreActividad, String experiencia, String asesor){
+        CodigoActividad codigo = CodigoActividad.datosValidos;
+        nombreActividad = this.textoActividad.getText();
+        if (nombreActividad.length() > this.LARGO_MAXIMO_ACTIVIDAD){
+            codigo = CodigoActividad.nombreLargo;
+        }else if (nombreActividad.trim().length() == 0){
+            codigo = CodigoActividad.nombreVacio;
+        }else if (experiencia.equals("No hay experiencias")){
+            codigo = CodigoActividad.experienciaVacia;
+        }else if (asesor.equals("No hay asesores")){
+            codigo = CodigoActividad.asesorVacio;
+        }else if (!fechasValidas()){
+            codigo = CodigoActividad.fechasInvalidas;
+        }
+        return codigo;
+    }
+    public boolean fechasValidas(){
+        boolean valida = true;
+        Fecha fecha = new Fecha();
+        int numeroMesInicio = fecha.getNumeroMes(this.comboInicioMes.getSelectedItem());
+        int numeroMesFin = fecha.getNumeroMes(this.comboFinMes.getSelectedItem());
+        if (numeroMesInicio == numeroMesFin){
+            int numeroDiaInicio = Integer.valueOf(this.comboInicioDia.getSelectedItem());
+            int numeroDiaFin = Integer.valueOf(this.comboFinDia.getSelectedItem());
+            if (numeroDiaInicio >= numeroDiaFin){
+                valida = false;
+            }
+        }else if (numeroMesInicio > numeroMesFin){
+            valida = false;
+        }
+        return valida;
+    }
+    public void mostrarMensajeError(CodigoActividad codigo){
+        String mensaje = "";
+        switch(codigo){
+            case nombreVacio:
+                mensaje = "Ingresa el nombre de la actividad";
+                break;
+            case nombreLargo:
+                mensaje = "El nombre es muy largo";
+                break;
+            case experienciaVacia:
+                mensaje = "No hay experiencias";
+                break;
+            case asesorVacio:
+                mensaje = "No hay asesores";
+                break;
+            case fechasInvalidas:
+                mensaje = "La fecha de fin no es válida";
+                break;
+        }
+        JOptionPane.showMessageDialog(null, mensaje);
     }
 
     /**
@@ -327,5 +391,23 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         }else if (boton.equals(this.botonCancelar)){
             dispose();
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent evento) {
+        if (evento.getSource().equals(this.textoActividad)){
+            int tecla = evento.getKeyCode();
+            if (this.textoActividad.getText().length() == this.LARGO_MAXIMO_ACTIVIDAD && tecla!=8 && tecla!=127){
+                evento.consume();
+            }
+        }
+    }
+    @Override
+    public void keyPressed(KeyEvent evento) {
+        
+    }
+    @Override
+    public void keyReleased(KeyEvent evento) {
+        
     }
 }
