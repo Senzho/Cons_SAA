@@ -77,6 +77,9 @@ public class ComboBox implements MouseListener{
             primerElemento=true;
         }
     }
+    public void EXRemoveAll(){
+        this.lista.removeAll();
+    }
     public void showList(int x, int y){
         menu.show(this.comboBox, x, y);
         visible=true;

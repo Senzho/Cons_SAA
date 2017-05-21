@@ -6,5 +6,6 @@ public enum CodigoActividad {
     experienciaVacia,
     asesorVacio,
     fechasInvalidas,
+    idIncorrecta,
     datosValidos
 }

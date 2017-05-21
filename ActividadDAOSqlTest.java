@@ -25,7 +25,10 @@ public class ActividadDAOSqlTest {
         nombreActividad = "Conversacion obligatoria 1";
         actividadDao = new ActividadDAOSql();
     }
-    
+    @Test
+    public void testGetActividadEquals(){
+        assertEquals(actividadDao.getActividad(idActividad).getDatosActividad().getIdActividad(), idActividad);
+    }
     @Test
     public void testAgregarActividad() {
         boolean esperado = true;
@@ -36,22 +39,10 @@ public class ActividadDAOSqlTest {
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
         assertEquals(actividadDao.agregarActividad(actividad, numeroPersonal), esperado);
     }
-    @Test 
-    public void getIdActividad(){
-        assertEquals(actividadDao.getIdActividad(nombreActividad), idActividad);
-    }
     @Test
     public void testUltimoId(){
         int esperado = 0;
         assertNotEquals(actividadDao.getUltimoId(), esperado);
-    }
-    @Test
-    public void testGetActividadNull(){
-        assertNotNull(actividadDao.getActividad(idActividad));
-    }
-    @Test
-    public void testGetActividadEquals(){
-        assertEquals(actividadDao.getActividad(idActividad).getDatosActividad().getIdActividad(), idActividad);
     }
     @Test
     public void testGetListaActividades(){
@@ -82,10 +73,5 @@ public class ActividadDAOSqlTest {
         DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
         assertEquals(actividadDao.actiualizarActividad(actividad, numeroPersonal), esperado);
-    }
-    @Test
-    public void testEliminarActividad(){
-        boolean esperado = true;
-        assertEquals(actividadDao.eliminarActividad(1), esperado);
-    }
+    }    
 }

@@ -38,7 +38,9 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
     private String numeroPersonal;
     private int idInscripcion;
     private int idExperiencia;
-    
+    private final int LARGO_MAXIMO_OBSERVACION = 100;
+    private ArrayList<Actividad> listaActividades;
+     
     public VentanaRegistrarActividad(String numeroPersonal, int idInscripcion, int idExperiencia){
         this.numeroPersonal = numeroPersonal;
         this.idInscripcion = idInscripcion;
@@ -62,6 +64,7 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         this.cargarComboActividad();
     }
     public void inicializarComponentes(){
+        ArrayList<Actividad> listaActividades = new ArrayList<>();
         panelPrincipal = new JPanel();
         panelBotones = new JPanel();
         panelObservaciones = new JPanel();
@@ -145,13 +148,25 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
        ActividadDAOSql actividadDao = new ActividadDAOSql();
        int modulo = Integer.parseInt(this.comboModulo.getSelectedItem());
        int seccion = Integer.parseInt(this.comboSeccion.getSelectedItem());
-       ArrayList<Actividad> listaActividades = actividadDao.getListaActividades(idExperiencia,modulo,seccion);
+       listaActividades = actividadDao.getListaActividades(idExperiencia,modulo,seccion);
        for(int i = 0; i< listaActividades.size(); i++){
            this.comboActividad.addString(listaActividades.get(i).getDatosActividad().getNombreActividad());
+       }if(listaActividades.size() == 0){
+           this.comboActividad.addString("No actividades disponibles");
        }
     }
+    @Override
+    public void ItemSelected(ComboBox combo) {
+        if (combo.equals(this.comboModulo) || combo.equals(this.comboSeccion)){
+            this.comboActividad.EXRemoveAll();
+            cargarComboActividad();
+        }   
+    }
+    public void limpiarComboActividad(){
+        
+    }
     public void cargarComboPuntaje(){
-        for(int i = 1; i<100; i++){
+        for(int i = 1; i<=100; i++){
             this.comboPuntaje.addString(""+i);
         }
     }
@@ -165,24 +180,50 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
             Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
             String observacion = this.txtObservacion.getText();
             int idActividad = actividadDao.getIdActividad(nombreActividad);
-            ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
-            boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
-            String mensaje="";
-            if (exito){
-                mensaje = "Actividad registrada con éxito";
+            CodigoActividad codigo = validarDatos(observacion, idActividad);
+            if (codigo.equals(CodigoActividad.datosValidos)){
+                ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
+                boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
+                String mensaje="";
+                if (exito){
+                    mensaje = "Actividad registrada con éxito";
+                    this.txtObservacion.setText("");
+                }else{
+                    mensaje = "No se pudo registrar la actividad";
+                }
+                JOptionPane.showMessageDialog(null, mensaje);
             }else{
-                mensaje = "No se pudo registrar la actividad";
+                mostrarMensajeError(codigo);
             }
-            JOptionPane.showMessageDialog(null, mensaje);
-        }else if (boton.equals(this.btnCancelar)){
+        }if (boton.equals(this.btnCancelar)){
             dispose();
         }
     }
-
-    @Override
-    public void ItemSelected(ComboBox combo) {
-        if (combo.equals(this.comboModulo) || combo.equals(this.comboSeccion)){
-            
+    
+    public CodigoActividad validarDatos(String datosObservacion, int idActividad){
+        CodigoActividad codigo = CodigoActividad.datosValidos;
+        datosObservacion = this.txtObservacion.getText();
+        if (datosObservacion.length() > this.LARGO_MAXIMO_OBSERVACION){
+            codigo = CodigoActividad.nombreLargo;
+        }else if (datosObservacion.trim().length() == 0){
+            codigo = CodigoActividad.nombreVacio;
+        }else if(idActividad == -1){
+            codigo = CodigoActividad.idIncorrecta;
         }
+        return codigo;
+    }
+    public void mostrarMensajeError(CodigoActividad codigo){
+        String mensaje = "";
+        switch(codigo){
+            case nombreVacio:
+                mensaje = "Ingresa observacion del estudiante";
+                break;
+            case nombreLargo:
+                mensaje = "Observacion muy larga";
+                break;
+            case idIncorrecta:
+                mensaje = "Actividad no disponible";
+        }
+        JOptionPane.showMessageDialog(null, mensaje);
     }
 }
