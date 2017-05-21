@@ -1,4 +1,4 @@
-package LogicaNegocio.Logica;
+package InterfazGrafica;
 
 import java.awt.FlowLayout;
 import java.awt.Font;

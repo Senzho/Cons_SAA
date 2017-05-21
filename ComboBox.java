@@ -1,7 +1,6 @@
-package LogicaNegocio.Logica;
+package InterfazGrafica;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,6 +23,7 @@ public class ComboBox implements MouseListener{
     private boolean visible;
     private boolean primerElemento;
     private String elementoSeleccionado;
+    private ListListener listListener;
     
     public ComboBox(Colores colores, ImageIcon icono){
         this.colores=colores;
@@ -91,6 +91,9 @@ public class ComboBox implements MouseListener{
     public String getSelectedItem(){
         return elementoSeleccionado;
     }
+    public void addListListener(ListListener listener){
+        this.listListener = listener;
+    }
 
     @Override
     public void mouseClicked(MouseEvent evento) {
@@ -125,6 +128,7 @@ public class ComboBox implements MouseListener{
                 elemento.setBackground(colores.getColorResalte());
                 elementoSeleccionado=elemento.getName();
                 texto.setText(" "+elementoSeleccionado+" ");
+                this.listListener.ItemSelected(this);
                 hideList();
                 elemento.setBackground(colores.getColorBase());
             }

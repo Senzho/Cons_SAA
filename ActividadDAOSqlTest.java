@@ -43,7 +43,7 @@ public class ActividadDAOSqlTest {
     @Test
     public void testUltimoId(){
         int esperado = 0;
-        assertNotEquals(actividadDao.getUltimoIdActividad(), esperado);
+        assertNotEquals(actividadDao.getUltimoId(), esperado);
     }
     @Test
     public void testGetActividadNull(){

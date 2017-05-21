@@ -1,8 +1,5 @@
 package InterfazGrafica;
 
-import LogicaNegocio.Logica.Button;
-import LogicaNegocio.Logica.Colores;
-import LogicaNegocio.Logica.ComboBox;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;

@@ -251,4 +251,25 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return eliminada;
     }
+    @Override
+    public int getUltimoId(){
+        int ultimoId = 0;
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select * from actividad");
+            ResultSet resultadoConsulta = orden.executeQuery();
+            if (resultadoConsulta.last()){
+                ultimoId = resultadoConsulta.getInt(1)+1;
+            }else{
+                ultimoId = 1;
+            }
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }finally{
+            conexionSql.cerrarConexion();
+        }
+        return ultimoId;
+    }
 }

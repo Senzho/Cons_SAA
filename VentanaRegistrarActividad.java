@@ -1,9 +1,5 @@
 package InterfazGrafica;
 
-import LogicaNegocio.Logica.Button;
-import LogicaNegocio.Logica.Colores;
-import LogicaNegocio.Logica.ComboBox;
-import LogicaNegocio.Logica.CursorListener;
 import LogicaNegocio.DAO.ActividadDAOSql;
 import LogicaNegocio.Entidades.ActividadRegistrada;
 import LogicaNegocio.Entidades.Actividad;
@@ -19,11 +15,11 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import java.util.Date;
-import javax.swing.Icon;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
-public class VentanaRegistrarActividad extends JFrame implements CursorListener {
+public class VentanaRegistrarActividad extends JFrame implements CursorListener, ListListener{
     private JPanel panelPrincipal;
     private JPanel panelBotones;
     private JPanel panelObservaciones;
@@ -59,8 +55,9 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener 
         this.configurarPanelBotones();
         this.configurarPanelObservaciones();
         this.configurarPanelAtributos();
-        this.cargarComboMoulo();
-        this.cargarComboSeccion();
+        CombosModuloSeccion combos = new CombosModuloSeccion();
+        combos.cargarComboMoulo(this.comboModulo);
+        combos.cargarComboSeccion(this.comboSeccion);
         this.cargarComboPuntaje();
         this.cargarComboActividad();
     }
@@ -86,6 +83,9 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener 
         this.comboActividad = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
         this.comboPuntaje = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
         this.btnRegistrar.addCursorListener(this);
+        this.btnCancelar.addCursorListener(this);
+        this.comboModulo.addListListener(this);
+        this.comboSeccion.addListListener(this);
     }
     public void configurarPanelBotones(){
         panelPrincipal.setLayout(new BorderLayout());
@@ -150,24 +150,10 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener 
            this.comboActividad.addString(listaActividades.get(i).getDatosActividad().getNombreActividad());
        }
     }
-    
-    public void cargarComboMoulo(){
-        for(int i = 1; i<4; i++){
-            this.comboModulo.addString(""+i);
-        }
-    }
-    public void cargarComboSeccion(){
-        for(int i = 1; i<5; i++){
-            this.comboSeccion.addString(""+i);
-        }
-    }
     public void cargarComboPuntaje(){
         for(int i = 1; i<100; i++){
             this.comboPuntaje.addString(""+i);
         }
-    }
-    public void agregarEventos(){
-    
     }
 
     @Override
@@ -180,7 +166,23 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener 
             String observacion = this.txtObservacion.getText();
             int idActividad = actividadDao.getIdActividad(nombreActividad);
             ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
-            actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
+            boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
+            String mensaje="";
+            if (exito){
+                mensaje = "Actividad registrada con éxito";
+            }else{
+                mensaje = "No se pudo registrar la actividad";
+            }
+            JOptionPane.showMessageDialog(null, mensaje);
+        }else if (boton.equals(this.btnCancelar)){
+            dispose();
+        }
+    }
+
+    @Override
+    public void ItemSelected(ComboBox combo) {
+        if (combo.equals(this.comboModulo) || combo.equals(this.comboSeccion)){
+            
         }
     }
 }

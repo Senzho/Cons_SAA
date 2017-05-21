@@ -1,8 +1,6 @@
 package InterfazGrafica;
 
 import javax.swing.JFrame;
-import LogicaNegocio.Logica.Button;
-import LogicaNegocio.Logica.Colores;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;

@@ -8,10 +8,6 @@ import LogicaNegocio.Entidades.Asesor;
 import LogicaNegocio.Entidades.DatosActividad;
 import LogicaNegocio.Entidades.DatosExperiencia;
 import LogicaNegocio.Entidades.ExperienciaEducativa;
-import LogicaNegocio.Logica.Button;
-import LogicaNegocio.Logica.Colores;
-import LogicaNegocio.Logica.ComboBox;
-import LogicaNegocio.Logica.CursorListener;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -285,7 +281,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     }
     public void agregarActividad(){
         ActividadDAOSql actividadDao = new ActividadDAOSql();
-        int idActividad = actividadDao.getUltimoIdActividad();
+        int idActividad = actividadDao.getUltimoId();
         String nombreActividad = this.textoActividad.getText();
         String fechaInicio = this.comboInicioAno.getSelectedItem() +"-"+ getNumeroMes(this.comboInicioMes.getSelectedItem()) +"-"+ this.comboInicioDia.getSelectedItem();
         Date fechaInicioDate = java.sql.Date.valueOf(fechaInicio);

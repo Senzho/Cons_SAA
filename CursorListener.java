@@ -1,4 +1,4 @@
-package LogicaNegocio.Logica;
+package InterfazGrafica;
 
 import java.util.EventListener;
 
