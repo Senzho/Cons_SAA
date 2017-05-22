@@ -107,7 +107,7 @@ public class ComboBox implements MouseListener{
     }
     public void setSelectedItem(String item){
         this.elementoSeleccionado = item;
-        this.texto.setText(this.elementoSeleccionado);
+        this.texto.setText(" "+this.elementoSeleccionado+" ");
     }
 
     @Override

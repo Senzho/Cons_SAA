@@ -16,6 +16,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.ImageIcon;
@@ -412,6 +414,15 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         this.comboSeccion.setSelectedItem(String.valueOf(this.actividad.getDatosExperiencia().getSeccion()));
         this.comboCupo.setSelectedItem(this.actividad.getDatosActividad().getCupo());
         this.textoActividad.setText(this.actividad.getDatosActividad().getNombreActividad());
+        Fecha fecha = new Fecha();
+        String fechaInicio = fecha.toString(this.actividad.getDatosActividad().getFechaInicio());
+        String fechaFin = fecha.toString(this.actividad.getDatosActividad().getFechaFin());
+        this.comboInicioDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaInicio)));
+        this.comboInicioMes.setSelectedItem(fecha.getMesFecha(fechaInicio));
+        this.comboInicioAno.setSelectedItem(fecha.getAnoFecha(fechaInicio));
+        this.comboFinDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaFin)));
+        this.comboFinMes.setSelectedItem(fecha.getMesFecha(fechaFin));
+        this.comboFinAno.setSelectedItem(fecha.getAnoFecha(fechaFin));
     }
     public String getMensajeFinal(boolean exito){
         String mensaje = "";

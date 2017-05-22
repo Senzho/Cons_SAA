@@ -37,9 +37,9 @@ public class ActividadDAOSqlTest {
         Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
         Date fechaFin = java.sql.Date.valueOf("2017-04-07");
         DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20), salon);
-        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
+        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1, numeroPersonal);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
-        assertEquals(actividadDao.agregarActividad(actividad, numeroPersonal), esperado);
+        assertEquals(actividadDao.agregarActividad(actividad), esperado);
     }
     @Test
     public void testUltimoId(){
@@ -72,8 +72,8 @@ public class ActividadDAOSqlTest {
         Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
         Date fechaFin = java.sql.Date.valueOf("2017-04-07");
         DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20),salon);
-        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
+        DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1, numeroPersonal);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
-        assertEquals(actividadDao.actiualizarActividad(actividad, numeroPersonal), esperado);
+        assertEquals(actividadDao.actiualizarActividad(actividad), esperado);
     }    
 }

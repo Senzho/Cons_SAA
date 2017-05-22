@@ -13,6 +13,9 @@ public class SistemaAutoAcceso {
         ActividadDAOSql actividadDao = new ActividadDAOSql();
         Actividad actividad = actividadDao.getActividad(1);
         new VentanaEditarAgregarActividad(false, actividad);
+        new VentanaMostrarActividad();
+        new VentanaSeguimiento();
+        new VentanaRegistrarActividad("1",1,1);
     }
     
 }
