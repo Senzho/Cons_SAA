@@ -84,8 +84,10 @@ public class ActividadDAOSql implements ActividadDAO{
                 int seccion = resultadoConsulta.getInt(6);
                 int modulo = resultadoConsulta.getInt(7);
                 int idExperiencia = resultadoConsulta.getInt(9);
-                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
-                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                String salon = resultadoConsulta.getString(10);
+                String numeroPersonal = resultadoConsulta.getString(8);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo,salon);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion, numeroPersonal);
                 actividad = new Actividad(datosActividad, datosExperiencia);
             }else{
                 Logger logger = Logger.getLogger("Logger");
@@ -116,8 +118,10 @@ public class ActividadDAOSql implements ActividadDAO{
                 int seccion = resultadoConsulta.getInt(6);
                 int modulo = resultadoConsulta.getInt(7);
                 int idExperiencia = resultadoConsulta.getInt(9);
-                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
-                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                String salon = resultadoConsulta.getString(10);
+                String numeroPersonal = resultadoConsulta.getString(8);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo,salon);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion, numeroPersonal);
                 Actividad actividad = new Actividad(datosActividad, datosExperiencia);
                 listaActividades.add(actividad);
             }
@@ -146,8 +150,10 @@ public class ActividadDAOSql implements ActividadDAO{
                 Date fechaInicio = resultadoConsulta.getDate(3);
                 Date fechaFin = resultadoConsulta.getDate(4);
                 String cupo = resultadoConsulta.getString(5);
-                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo);
-                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion);
+                String salon = resultadoConsulta.getString(10);
+                String numeroPersonal = resultadoConsulta.getString(8);
+                DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicio, fechaFin, cupo,salon);
+                DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, modulo, seccion,numeroPersonal);
                 Actividad actividad = new Actividad(datosActividad, datosExperiencia);
                 actividades.add(actividad);
             }

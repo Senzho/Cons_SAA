@@ -34,4 +34,26 @@ public class ExperienciaEducativaDAOSql implements ExperienciaEducativaDAO{
         }
         return listaExperiencias;
     }
+    @Override
+    public ExperienciaEducativa getExperienciaEducativa(int idExperiencia){
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        ExperienciaEducativa experienciaEducativa = null;
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select * from experienciaEducativa where idExperiencia = ?");
+            orden.setInt(1, idExperiencia);
+            ResultSet resultadoConsulta = orden.executeQuery();
+            if(resultadoConsulta.first()){
+                String nombreExperiencia = resultadoConsulta.getString(2);
+                experienciaEducativa = new ExperienciaEducativa(idExperiencia,nombreExperiencia);
+            }else{
+                Logger logger = Logger.getLogger("Logger");
+                logger.log(Level.WARNING, "No se encuentra la actividad solicitada.");
+            }
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }
+        return experienciaEducativa;
+    }
 }

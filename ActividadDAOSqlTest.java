@@ -15,12 +15,14 @@ public class ActividadDAOSqlTest {
     private ActividadDAOSql actividadDao;
     private int idActividad;
     private String nombreActividad;
+    private String salon;
     
     public ActividadDAOSqlTest() {
         Date fecha = java.sql.Date.valueOf("2017-03-05");
         actividad = new ActividadRegistrada(25, fecha, "Faltan horas de estudio", 1);
         idInscripcion = 1;
         idActividad = 1;
+        salon = "SAA";
         numeroPersonal = "SH67GV";
         nombreActividad = "Conversacion obligatoria 1";
         actividadDao = new ActividadDAOSql();
@@ -34,7 +36,7 @@ public class ActividadDAOSqlTest {
         boolean esperado = true;
         Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
         Date fechaFin = java.sql.Date.valueOf("2017-04-07");
-        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20));
+        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20), salon);
         DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
         assertEquals(actividadDao.agregarActividad(actividad, numeroPersonal), esperado);
@@ -69,7 +71,7 @@ public class ActividadDAOSqlTest {
         boolean esperado = true;
         Date fechaInicio = java.sql.Date.valueOf("2017-03-05");
         Date fechaFin = java.sql.Date.valueOf("2017-04-07");
-        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20));
+        DatosActividad datosActividad = new DatosActividad(1, "Conversacion obligatoria 1", fechaInicio, fechaFin, String.valueOf(20),salon);
         DatosExperiencia datosExperiencia = new DatosExperiencia(1, 1, 1);
         Actividad actividad = new Actividad(datosActividad, datosExperiencia);
         assertEquals(actividadDao.actiualizarActividad(actividad, numeroPersonal), esperado);

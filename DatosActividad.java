@@ -8,15 +8,16 @@ public class DatosActividad {
     private Date fechaInicio;
     private Date fechaFin;
     private String cupo;
+    private String salon;
 
-    public DatosActividad(int idActividad, String nombreActividad, Date fechaInicio, Date fechaFin, String cupo) {
+    public DatosActividad(int idActividad, String nombreActividad, Date fechaInicio, Date fechaFin, String cupo, String salon) {
         this.idActividad = idActividad;
         this.nombreActividad = nombreActividad;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.cupo = cupo;
+        this.salon = salon;
     }
-
     public int getIdActividad() {
         return idActividad;
     }
@@ -31,5 +32,8 @@ public class DatosActividad {
     }
     public String getCupo() {
         return cupo;
+    }
+    public String getSalon(){
+        return salon;
     }
 }
