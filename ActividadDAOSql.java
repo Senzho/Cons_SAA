@@ -40,13 +40,13 @@ public class ActividadDAOSql implements ActividadDAO{
         return idActividad;
     }
     @Override
-    public boolean agregarActividad(Actividad actividad, String numeroPersonal){
+    public boolean agregarActividad(Actividad actividad){
         boolean registroExitoso = false;
         ConexionSQL conexionSql = new ConexionSQL();
         Connection conexion = conexionSql.getConexion();
         try{
             PreparedStatement orden = conexion.prepareStatement("insert into actividad (idActividad, nombreActividad, fechaInicio,fechaFin"
-                    + ", cupo, seccion, modulo, numeroPersonal, idExperiencia) values (?, ?, ?, ?, ?, ?,?,?,?)");
+                    + ", cupo, seccion, modulo, numeroPersonal, idExperiencia, salon) values (?, ?, ?, ?, ?, ?,?,?,?,?)");
             orden.setInt(1, actividad.getDatosActividad().getIdActividad());
             orden.setString(2, actividad.getDatosActividad().getNombreActividad());
             orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
@@ -54,8 +54,9 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.setString(5, actividad.getDatosActividad().getCupo());
             orden.setInt(6, actividad.getDatosExperiencia().getSeccion());
             orden.setInt(7, actividad.getDatosExperiencia().getModulo());
-            orden.setString(8, numeroPersonal);
+            orden.setString(8, actividad.getDatosExperiencia().getNumeroPersonal());
             orden.setInt(9, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.setString(10, actividad.getDatosActividad().getSalon());
             orden.execute();
             registroExitoso = true;
         }catch(SQLException | NullPointerException excepcion){
@@ -215,13 +216,13 @@ public class ActividadDAOSql implements ActividadDAO{
         return actividadesRegistradas;
     }
     @Override
-    public boolean actiualizarActividad(Actividad actividad, String numeroPersonal) {
+    public boolean actiualizarActividad(Actividad actividad) {
         boolean actualizada = false;
         ConexionSQL conexionSql = new ConexionSQL();
         Connection conexion = conexionSql.getConexion();
         try{
             PreparedStatement orden = conexion.prepareStatement("update actividad set nombreActividad = ?, fechaInicio = ?, "
-                    + "fechaFin = ?, cupo = ?, seccion = ?, modulo = ? where idActividad = ?");
+                    + "fechaFin = ?, cupo = ?, seccion = ?, modulo = ?, numeroPersonal = ?, idExperiencia = ?, salon = ? where idActividad = ?");
             orden.setString(1, actividad.getDatosActividad().getNombreActividad());
             orden.setDate(2, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
             orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaFin().toString()));
@@ -229,7 +230,10 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.setString(4, cu);
             orden.setInt(5, actividad.getDatosExperiencia().getSeccion());
             orden.setInt(6, actividad.getDatosExperiencia().getModulo());
-            orden.setInt(7, actividad.getDatosActividad().getIdActividad());
+            orden.setString(7, actividad.getDatosExperiencia().getNumeroPersonal());
+            orden.setInt(8, actividad.getDatosExperiencia().getIdExperiencia());
+            orden.setString(9, actividad.getDatosActividad().getSalon());
+            orden.setInt(10, actividad.getDatosActividad().getIdActividad());
             orden.executeUpdate();
             actualizada = true;
         }catch(SQLException | NullPointerException excepcion){

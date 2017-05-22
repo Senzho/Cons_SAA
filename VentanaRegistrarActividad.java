@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.text.DateFormat;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -19,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-public class VentanaRegistrarActividad extends JFrame implements CursorListener, ListListener{
+public class VentanaRegistrarActividad extends JFrame implements CursorListener, ListListener, KeyListener{
     private JPanel panelPrincipal;
     private JPanel panelBotones;
     private JPanel panelObservaciones;
@@ -89,6 +91,7 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         this.btnCancelar.addCursorListener(this);
         this.comboModulo.addListListener(this);
         this.comboSeccion.addListListener(this);
+        this.txtObservacion.addKeyListener(this);
     }
     public void configurarPanelBotones(){
         panelPrincipal.setLayout(new BorderLayout());
@@ -149,39 +152,57 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
        int modulo = Integer.parseInt(this.comboModulo.getSelectedItem());
        int seccion = Integer.parseInt(this.comboSeccion.getSelectedItem());
        listaActividades = actividadDao.getListaActividades(idExperiencia,modulo,seccion);
-       for(int i = 0; i< listaActividades.size(); i++){
+       this.comboActividad.removeAll();
+       int numeroElementos = listaActividades.size();
+       for(int i = 0; i< numeroElementos; i++){
            this.comboActividad.addString(listaActividades.get(i).getDatosActividad().getNombreActividad());
-       }if(listaActividades.size() == 0){
-           this.comboActividad.addString("No actividades disponibles");
+       }if(numeroElementos == 0){
+           this.comboActividad.addString("No hay actividades");
        }
-    }
-    @Override
-    public void ItemSelected(ComboBox combo) {
-        if (combo.equals(this.comboModulo) || combo.equals(this.comboSeccion)){
-            this.comboActividad.EXRemoveAll();
-            cargarComboActividad();
-        }   
-    }
-    public void limpiarComboActividad(){
-        
     }
     public void cargarComboPuntaje(){
         for(int i = 1; i<=100; i++){
             this.comboPuntaje.addString(""+i);
         }
     }
+    public CodigoActividad validarDatos(String datosObservacion, String actividad){
+        CodigoActividad codigo = CodigoActividad.datosValidos;
+        datosObservacion = this.txtObservacion.getText();
+        if (datosObservacion.length() > this.LARGO_MAXIMO_OBSERVACION){
+            codigo = CodigoActividad.nombreLargo;
+        }else if (datosObservacion.trim().length() == 0){
+            codigo = CodigoActividad.nombreVacio;
+        }else if(actividad.equals("No hay actividades")){
+            codigo = CodigoActividad.actividadVacia;
+        }
+        return codigo;
+    }
+    public void mostrarMensajeError(CodigoActividad codigo){
+        String mensaje = "";
+        switch(codigo){
+            case nombreVacio:
+                mensaje = "Ingresa observacion del estudiante";
+                break;
+            case nombreLargo:
+                mensaje = "Observacion muy larga";
+                break;
+            case actividadVacia:
+                mensaje = "No hay actividades";
+        }
+        JOptionPane.showMessageDialog(null, mensaje);
+    }
 
     @Override
     public void cursorClicked(Button boton) {
         if(boton.equals(btnRegistrar)){
-            ActividadDAOSql actividadDao = new ActividadDAOSql();
             String nombreActividad = this.comboActividad.getSelectedItem();
-            int porcentaje = Integer.parseInt(this.comboPuntaje.getSelectedItem());
-            Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
             String observacion = this.txtObservacion.getText();
-            int idActividad = actividadDao.getIdActividad(nombreActividad);
-            CodigoActividad codigo = validarDatos(observacion, idActividad);
+            CodigoActividad codigo = validarDatos(observacion, nombreActividad);
             if (codigo.equals(CodigoActividad.datosValidos)){
+                ActividadDAOSql actividadDao = new ActividadDAOSql();
+                int porcentaje = Integer.parseInt(this.comboPuntaje.getSelectedItem());
+                Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
+                int idActividad = actividadDao.getIdActividad(nombreActividad);
                 ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
                 boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
                 String mensaje="";
@@ -200,30 +221,29 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         }
     }
     
-    public CodigoActividad validarDatos(String datosObservacion, int idActividad){
-        CodigoActividad codigo = CodigoActividad.datosValidos;
-        datosObservacion = this.txtObservacion.getText();
-        if (datosObservacion.length() > this.LARGO_MAXIMO_OBSERVACION){
-            codigo = CodigoActividad.nombreLargo;
-        }else if (datosObservacion.trim().length() == 0){
-            codigo = CodigoActividad.nombreVacio;
-        }else if(idActividad == -1){
-            codigo = CodigoActividad.idIncorrecta;
-        }
-        return codigo;
+    @Override
+    public void ItemSelected(ComboBox combo) {
+        if (combo.equals(this.comboModulo) || combo.equals(this.comboSeccion)){
+            this.comboActividad.removeAll();
+            cargarComboActividad();
+        }   
     }
-    public void mostrarMensajeError(CodigoActividad codigo){
-        String mensaje = "";
-        switch(codigo){
-            case nombreVacio:
-                mensaje = "Ingresa observacion del estudiante";
-                break;
-            case nombreLargo:
-                mensaje = "Observacion muy larga";
-                break;
-            case idIncorrecta:
-                mensaje = "Actividad no disponible";
+    
+    @Override
+    public void keyTyped(KeyEvent evento) {
+        if (evento.getSource().equals(this.txtObservacion)){
+            int tecla = evento.getKeyCode();
+            if (this.txtObservacion.getText().length() == this.LARGO_MAXIMO_OBSERVACION && tecla!=8 && tecla!=127){
+                evento.consume();
+            }
         }
-        JOptionPane.showMessageDialog(null, mensaje);
+    }
+    @Override
+    public void keyPressed(KeyEvent evento) {
+        
+    }
+    @Override
+    public void keyReleased(KeyEvent evento) {
+        
     }
 }

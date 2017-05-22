@@ -4,11 +4,13 @@ public class DatosExperiencia {
     private int idExperiencia;
     private int modulo;
     private int seccion;
+    private String numeroPersonal;
 
-    public DatosExperiencia(int idExperiencia, int modulo, int seccion) {
+    public DatosExperiencia(int idExperiencia, int modulo, int seccion, String numeroPersonal) {
         this.idExperiencia = idExperiencia;
         this.modulo = modulo;
         this.seccion = seccion;
+        this.numeroPersonal = numeroPersonal;
     }
 
     public int getIdExperiencia() {
@@ -19,5 +21,8 @@ public class DatosExperiencia {
     }
     public int getSeccion() {
         return seccion;
+    }
+    public String getNumeroPersonal(){
+        return numeroPersonal;
     }
 }

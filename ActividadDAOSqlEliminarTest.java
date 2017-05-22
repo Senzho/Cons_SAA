@@ -1,9 +1,6 @@
 package LogicaNegocio.DAO;
 
-import LogicaNegocio.Entidades.Actividad;
 import LogicaNegocio.Entidades.ActividadRegistrada;
-import LogicaNegocio.Entidades.DatosActividad;
-import LogicaNegocio.Entidades.DatosExperiencia;
 import java.util.Date;
 import org.junit.Test;
 import static org.junit.Assert.*;

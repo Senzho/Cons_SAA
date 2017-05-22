@@ -36,4 +36,30 @@ public class AsesorDAOSql implements AsesorDAO{
         }
         return listaAsesores;
     }
+    @Override
+    public Asesor getAsesor(String numeroPersonal) {
+        Asesor asesor = null;
+        ConexionSQL conexionSql = new ConexionSQL();
+        Connection conexion = conexionSql.getConexion();
+        try{
+            PreparedStatement orden = conexion.prepareStatement("select * from asesor where numeroPersonal =?");
+            orden.setString(1, numeroPersonal);
+            ResultSet resultadoConsulta = orden.executeQuery();
+            if(resultadoConsulta.first()){
+                String nombre;
+                String idioma;
+                numeroPersonal = resultadoConsulta.getString(1);
+                nombre = resultadoConsulta.getString(4) +" "+ resultadoConsulta.getString(6) +" "+ resultadoConsulta.getString(5);
+                idioma = resultadoConsulta.getString(2);
+                asesor = new Asesor(numeroPersonal, nombre, idioma);
+            }else{
+                Logger logger = Logger.getLogger("Logger");
+                logger.log(Level.WARNING, "No se encuentra el asesor");
+            }
+        }catch(SQLException | NullPointerException excepcion){
+            Logger logger = Logger.getLogger("Logger");
+            logger.log(Level.WARNING, "La conexión podría ser nula | la sentencia SQL esta mal");
+        }
+        return asesor;
+    }
 }

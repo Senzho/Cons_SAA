@@ -47,6 +47,9 @@ public class Button implements MouseListener{
     public void setVisible(boolean visible){
         this.boton.setVisible(visible);
     }
+    public void setText(String texto){
+        this.texto.setText(texto);
+    }
 
     @Override
     public void mouseClicked(MouseEvent evento) {

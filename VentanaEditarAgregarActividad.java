@@ -47,12 +47,19 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     private ArrayList<Asesor> listaAsesores;
     
     private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+    private boolean tipo;
+    private Actividad actividad;
     private final int LARGO_MAXIMO_ACTIVIDAD = 50;
     
-    public VentanaEditarAgregarActividad(){
+    public VentanaEditarAgregarActividad(boolean tipo, Actividad actividad){
+        this.tipo = tipo;
+        this.actividad = actividad;
         inicializarComponentes();
         establecerPropiedades();
-        setTitle("Agregar actividad");
+        setTitulo();
+        if (actividad!=null){
+            cargarActividad();
+        }
         setSize(450,450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -184,6 +191,9 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         this.botonGuardarAgregar.addCursorListener(this);
         this.botonCancelar.addCursorListener(this);
         this.textoActividad.addKeyListener(this);
+        if (!this.tipo){
+            this.botonGuardarAgregar.setText("Editar actividad");
+        }
     }
     public void inicializarCombos(){
         this.comboExperiencia = new ComboBox(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoAbajoOscuro.png")));
@@ -260,6 +270,13 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             this.comboAsesor.addString("No hay asesores");
         }
     }
+    public void setTitulo(){
+        if (this.tipo){
+            setTitle("Agregar actividad");
+        }else{
+            setTitle("Editar actividad");
+        }
+    }
     public int getIdExperiencia(String nombreExperiencia){
         int idExperiencia = 0;
         int numeroElementos = this.listaExperiencias.size();
@@ -291,7 +308,12 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         CodigoActividad codigo = validarDatos(nombreActividad, experiencia, asesor);
         if (codigo.equals(CodigoActividad.datosValidos)){
             ActividadDAOSql actividadDao = new ActividadDAOSql();
-            int idActividad = actividadDao.getUltimoId();
+            int idActividad;
+            if (this.tipo){
+                idActividad = actividadDao.getUltimoId();
+            }else{
+                idActividad = this.actividad.getDatosActividad().getIdActividad();
+            }
             String fechaInicio = this.comboInicioAno.getSelectedItem() +"-"+ getNumeroMes(this.comboInicioMes.getSelectedItem()) +"-"+ this.comboInicioDia.getSelectedItem();
             Date fechaInicioDate = java.sql.Date.valueOf(fechaInicio);
             String fechaFin = this.comboFinAno.getSelectedItem() +"-"+ getNumeroMes(this.comboFinMes.getSelectedItem()) +"-"+ this.comboFinDia.getSelectedItem();
@@ -301,17 +323,17 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             String modulo = this.comboModulo.getSelectedItem();
             String numeroPersonal = getNumeroPersonal(asesor);
             int idExperiencia = getIdExperiencia(experiencia);
-            DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicioDate, fechaFinDate, cupo);
-            DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, Integer.valueOf(modulo), Integer.valueOf(seccion));
+            String salon = this.comboSalon.getSelectedItem();
+            DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicioDate, fechaFinDate, cupo, salon);
+            DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, Integer.valueOf(modulo), Integer.valueOf(seccion), numeroPersonal);
             Actividad nuevaActividad = new Actividad(datosActividad, datosExperiencia);
-            boolean exito = actividadDao.agregarActividad(nuevaActividad, numeroPersonal);
-            String mensaje = "";
-            if (exito){
-                mensaje = "Actividad agregada satisfactoriamente";
+            boolean exito;
+            if (this.tipo){
+                exito = actividadDao.agregarActividad(nuevaActividad);
             }else{
-                mensaje = "La actividad no se pudo crear :(";
+                exito = actividadDao.actiualizarActividad(nuevaActividad);
             }
-            JOptionPane.showMessageDialog(null, mensaje);
+            JOptionPane.showMessageDialog(null, getMensajeFinal(exito));
             dispose();
         }else{
             mostrarMensajeError(codigo);
@@ -378,6 +400,35 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
                 break;
         }
         JOptionPane.showMessageDialog(null, mensaje);
+    }
+    public void cargarActividad(){
+        ExperienciaEducativaDAOSql experienciaDao = new ExperienciaEducativaDAOSql();
+        String nombreExperiencia = experienciaDao.getExperienciaEducativa(this.actividad.getDatosExperiencia().getIdExperiencia()).getNombreExperiencia();
+        this.comboExperiencia.setSelectedItem(nombreExperiencia);
+        AsesorDAOSql asesorDao = new AsesorDAOSql();
+        this.comboAsesor.setSelectedItem(asesorDao.getAsesor(this.actividad.getDatosExperiencia().getNumeroPersonal()).getNombre());
+        this.comboSalon.setSelectedItem(String.valueOf(this.actividad.getDatosActividad().getSalon()));
+        this.comboModulo.setSelectedItem(String.valueOf(this.actividad.getDatosExperiencia().getModulo()));
+        this.comboSeccion.setSelectedItem(String.valueOf(this.actividad.getDatosExperiencia().getSeccion()));
+        this.comboCupo.setSelectedItem(this.actividad.getDatosActividad().getCupo());
+        this.textoActividad.setText(this.actividad.getDatosActividad().getNombreActividad());
+    }
+    public String getMensajeFinal(boolean exito){
+        String mensaje = "";
+        if (exito){
+            if (this.tipo){
+                mensaje = "Actividad agregada satisfactoriamente";
+            }else{
+                mensaje = "Actividad actualizada satisfactoriamente";
+            }
+        }else{
+            if (this.tipo){
+                mensaje = "La actividad no se pudo crear :(";
+            }else{
+                mensaje = "La actividad no se pudo actualizar :(";
+            }
+        }
+        return mensaje;
     }
 
     /**

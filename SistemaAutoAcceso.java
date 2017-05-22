@@ -4,14 +4,15 @@ import InterfazGrafica.VentanaEditarAgregarActividad;
 import InterfazGrafica.VentanaMostrarActividad;
 import InterfazGrafica.VentanaRegistrarActividad;
 import InterfazGrafica.VentanaSeguimiento;
+import LogicaNegocio.DAO.ActividadDAOSql;
+import LogicaNegocio.Entidades.Actividad;
 
 public class SistemaAutoAcceso {
 
     public static void main(String[] args) {
-        new VentanaEditarAgregarActividad();
-        new VentanaMostrarActividad();
-        new VentanaRegistrarActividad("1", 1, 1);
-        new VentanaSeguimiento();
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        Actividad actividad = actividadDao.getActividad(1);
+        new VentanaEditarAgregarActividad(false, actividad);
     }
     
 }

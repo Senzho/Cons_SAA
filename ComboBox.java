@@ -76,9 +76,13 @@ public class ComboBox implements MouseListener{
             elementoSeleccionado=cadena;
             primerElemento=true;
         }
+        reload();
     }
-    public void EXRemoveAll(){
+    public void removeAll(){
         this.lista.removeAll();
+        this.primerElemento = false;
+        this.elementoSeleccionado = "";
+        reload();
     }
     public void showList(int x, int y){
         menu.show(this.comboBox, x, y);
@@ -96,6 +100,14 @@ public class ComboBox implements MouseListener{
     }
     public void addListListener(ListListener listener){
         this.listListener = listener;
+    }
+    public void reload(){
+        this.lista.setVisible(false);
+        this.lista.setVisible(true);
+    }
+    public void setSelectedItem(String item){
+        this.elementoSeleccionado = item;
+        this.texto.setText(this.elementoSeleccionado);
     }
 
     @Override
