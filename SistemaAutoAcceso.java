@@ -10,12 +10,12 @@ import LogicaNegocio.Entidades.Actividad;
 public class SistemaAutoAcceso {
 
     public static void main(String[] args) {
-        ActividadDAOSql actividadDao = new ActividadDAOSql();
-        Actividad actividad = actividadDao.getActividad(1);
-        new VentanaEditarAgregarActividad(false, actividad);
+        /*ActividadDAOSql actividadDao = new ActividadDAOSql();
+        Actividad actividad = actividadDao.getActividad(1);*/
+        new VentanaEditarAgregarActividad(true, null);
         new VentanaMostrarActividad();
-        new VentanaSeguimiento();
-        new VentanaRegistrarActividad("1",1,1);
+        /*new VentanaSeguimiento();
+        new VentanaRegistrarActividad("1",1,1);*/
     }
     
 }

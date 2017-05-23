@@ -9,9 +9,10 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
-public class VentanaMostrarActividad extends JFrame{
+public class VentanaMostrarActividad extends JFrame implements SelectionListener, CursorListener{
     private Button btnEditar;
     private Button btnAgregar;
     private Button btnEliminar;
@@ -21,8 +22,11 @@ public class VentanaMostrarActividad extends JFrame{
     private JScrollPane scrollActividades;
     private JPanel panelActividades;
     private ArrayList<BloqueActividad> listaBloqueActividades;
+    private BloqueActividad bloqueActividad;
     
     public VentanaMostrarActividad(){
+        this.listaBloqueActividades = new ArrayList();
+        this.bloqueActividad = null;
         this.inicializarComponentes();
         this.agregarComponentes();
         this.cargarActividades();
@@ -43,6 +47,7 @@ public class VentanaMostrarActividad extends JFrame{
         panelBotones = new JPanel();
         panelActividades = new JPanel();
         scrollActividades = new JScrollPane(panelActividades);
+        scrollActividades.setBorder(BorderFactory.createLineBorder(panelActividades.getBackground(), 10));
     }  
     public void agregarComponentes(){
         add(panelPrincipal);
@@ -59,14 +64,16 @@ public class VentanaMostrarActividad extends JFrame{
         panelBotones.setBackground(new Colores().getColorBase());
         panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
         panelPrincipal.add(scrollActividades, BorderLayout.CENTER);
+        this.btnSalir.addCursorListener(this);
     }
     public void cargarActividades(){
         ArrayList<Actividad> listaActividades = new ArrayList<>();
         ActividadDAOSql actividadDao = new ActividadDAOSql();
         listaActividades = actividadDao.getListaActividades();
         for(int i = 0; i<listaActividades.size(); i++){
-            BloqueActividad bloqueActividad = new BloqueActividad(listaActividades.get(i));
-            listaBloqueActividades.add(bloqueActividad);
+            BloqueActividad bloqueActividadLista = new BloqueActividad(listaActividades.get(i));
+            bloqueActividadLista.addSelectionListener(this);
+            listaBloqueActividades.add(bloqueActividadLista);
         }
     }
     public void mostrarActividades(){
@@ -76,5 +83,31 @@ public class VentanaMostrarActividad extends JFrame{
        }
        panelActividades.setVisible(false);
        panelActividades.setVisible(true);
+    }
+    public void deseleccionarBloque(){
+        int numeroElementos = this.listaBloqueActividades.size();
+        for (int i = 0; i < numeroElementos; i++){
+            BloqueActividad bloque = this.listaBloqueActividades.get(i);
+            if (bloque.estaSeleccionado()){
+                bloque.deseleccionar();
+            }
+        }
+    }
+
+    @Override
+    public void bloqueSeleccionado(BloqueActividad bloque) {
+        this.bloqueActividad = bloque;
+        deseleccionarBloque();
+    }
+    @Override
+    public void bloqueDeseleccionado(BloqueActividad bloque) {
+        this.bloqueActividad = null;
+    }
+
+    @Override
+    public void cursorClicked(Button boton) {
+        if (boton.equals(this.btnSalir)){
+            dispose();
+        }
     }
 }
