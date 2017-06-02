@@ -22,12 +22,16 @@ public class AsesorDAOSql implements AsesorDAO{
             String numeroPersonal;
             String nombre;
             String idioma;
+            String telefono;
+            String correo;
             Asesor asesor;
             while(resultadoConsulta.next()){
                 numeroPersonal = resultadoConsulta.getString(1);
                 nombre = resultadoConsulta.getString(4) +" "+ resultadoConsulta.getString(6) +" "+ resultadoConsulta.getString(5);
                 idioma = resultadoConsulta.getString(2);
-                asesor = new Asesor(numeroPersonal, nombre, idioma);
+                telefono = resultadoConsulta.getString(8);
+                correo = resultadoConsulta.getString(7);
+                asesor = new Asesor(numeroPersonal, nombre, idioma,telefono,correo);
                 listaAsesores.add(asesor);
             }
         }catch(SQLException | NullPointerException excepcion){
@@ -48,10 +52,14 @@ public class AsesorDAOSql implements AsesorDAO{
             if(resultadoConsulta.first()){
                 String nombre;
                 String idioma;
+                String correo;
+                String telefono;
                 numeroPersonal = resultadoConsulta.getString(1);
                 nombre = resultadoConsulta.getString(4) +" "+ resultadoConsulta.getString(6) +" "+ resultadoConsulta.getString(5);
                 idioma = resultadoConsulta.getString(2);
-                asesor = new Asesor(numeroPersonal, nombre, idioma);
+                telefono = resultadoConsulta.getString(8);
+                correo = resultadoConsulta.getString(7);
+                asesor = new Asesor(numeroPersonal, nombre, idioma,telefono,correo);
             }else{
                 Logger logger = Logger.getLogger("Logger");
                 logger.log(Level.WARNING, "No se encuentra el asesor");

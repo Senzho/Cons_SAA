@@ -24,9 +24,11 @@ public class UsuarioDAOSql implements UsuarioDAO{
             ResultSet resultadoConsulta = orden.executeQuery();
             if (resultadoConsulta.first()){
                 String matricula = resultadoConsulta.getString(1);
+                String correo = resultadoConsulta.getString(7);
+                String telefono = resultadoConsulta.getString(8);
                 String nombre = resultadoConsulta.getString(2)+ resultadoConsulta.getString(3) + resultadoConsulta.getString(4);
                 InscripcionDAOSql inscripcion = new InscripcionDAOSql();
-                usuario = new Usuario(matricula, nombre, inscripcion.getListaInscripciones(matricula));
+                usuario = new Usuario(matricula, nombre, inscripcion.getListaInscripciones(matricula), telefono,correo);
             }else{
                 Logger logger = Logger.getLogger("Logger");
                 logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");
