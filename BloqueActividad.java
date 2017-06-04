@@ -26,6 +26,7 @@ public class BloqueActividad implements MouseListener{
     private Colores colores;
     private SelectionListener selectionListener;
     private boolean seleccionado;
+    private final Color COLOR_RESALTE = new Color(55,127,100);
     
     public BloqueActividad(Actividad actividad){
         this.seleccionado = false;
@@ -115,6 +116,9 @@ public class BloqueActividad implements MouseListener{
         cambiarColorLetra(Color.black);
         this.seleccionado = false;
     }
+    public void setPanel(JPanel panel){
+        this.panelActividad = panel;
+    }
 
     @Override
     public void mouseClicked(MouseEvent evento) {
@@ -133,11 +137,15 @@ public class BloqueActividad implements MouseListener{
         if (panelResaltado(objetoFuente)){
             if (this.seleccionado){
                 cambiarColorFondo(this.colores.getColorResalte());
-                this.selectionListener.bloqueDeseleccionado(this);
+                if (this.selectionListener != null){
+                    this.selectionListener.bloqueDeseleccionado(this);
+                }
                 deseleccionar();
             }else{
-                cambiarColorFondo(new Color(51, 51, 255));
-                this.selectionListener.bloqueSeleccionado(this);
+                cambiarColorFondo(this.COLOR_RESALTE);
+                if (this.selectionListener != null){
+                    this.selectionListener.bloqueSeleccionado(this);
+                }
                 cambiarColorLetra(Color.white);
                 this.seleccionado = true;
             }

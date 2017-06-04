@@ -16,8 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.ImageIcon;
@@ -50,21 +48,22 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     
     private String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
     private boolean tipo;
-    private Actividad actividad;
+    private int idActividad;
+    private ComunicationListener comunicationListener;
+    
     private final int LARGO_MAXIMO_ACTIVIDAD = 50;
     
-    public VentanaEditarAgregarActividad(boolean tipo, Actividad actividad){
+    public VentanaEditarAgregarActividad(boolean tipo, int idActividad){
         this.tipo = tipo;
-        this.actividad = actividad;
+        this.idActividad = idActividad;
         inicializarComponentes();
         establecerPropiedades();
         setTitulo();
-        if (actividad!=null){
+        if (this.idActividad != 0){
             cargarActividad();
         }
         setSize(450,450);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         //setIconImage(new ImageIcon(getClass().getResource("/RecursosGraficos/iconoDrakzo3.png")).getImage());
         setVisible(true);
     }
@@ -314,7 +313,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             if (this.tipo){
                 idActividad = actividadDao.getUltimoId();
             }else{
-                idActividad = this.actividad.getDatosActividad().getIdActividad();
+                idActividad = this.idActividad;
             }
             String fechaInicio = this.comboInicioAno.getSelectedItem() +"-"+ getNumeroMes(this.comboInicioMes.getSelectedItem()) +"-"+ this.comboInicioDia.getSelectedItem();
             Date fechaInicioDate = java.sql.Date.valueOf(fechaInicio);
@@ -332,8 +331,14 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             boolean exito;
             if (this.tipo){
                 exito = actividadDao.agregarActividad(nuevaActividad);
+                if (this.comunicationListener != null){
+                    this.comunicationListener.actividadAgregada(new BloqueActividad(nuevaActividad));
+                }
             }else{
                 exito = actividadDao.actiualizarActividad(nuevaActividad);
+                if (this.comunicationListener != null){
+                    this.comunicationListener.actividadEditada(new BloqueActividad(nuevaActividad));
+                }
             }
             JOptionPane.showMessageDialog(null, getMensajeFinal(exito));
             dispose();
@@ -404,25 +409,31 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
         JOptionPane.showMessageDialog(null, mensaje);
     }
     public void cargarActividad(){
-        ExperienciaEducativaDAOSql experienciaDao = new ExperienciaEducativaDAOSql();
-        String nombreExperiencia = experienciaDao.getExperienciaEducativa(this.actividad.getDatosExperiencia().getIdExperiencia()).getNombreExperiencia();
-        this.comboExperiencia.setSelectedItem(nombreExperiencia);
-        AsesorDAOSql asesorDao = new AsesorDAOSql();
-        this.comboAsesor.setSelectedItem(asesorDao.getAsesor(this.actividad.getDatosExperiencia().getNumeroPersonal()).getNombre());
-        this.comboSalon.setSelectedItem(String.valueOf(this.actividad.getDatosActividad().getSalon()));
-        this.comboModulo.setSelectedItem(String.valueOf(this.actividad.getDatosExperiencia().getModulo()));
-        this.comboSeccion.setSelectedItem(String.valueOf(this.actividad.getDatosExperiencia().getSeccion()));
-        this.comboCupo.setSelectedItem(this.actividad.getDatosActividad().getCupo());
-        this.textoActividad.setText(this.actividad.getDatosActividad().getNombreActividad());
-        Fecha fecha = new Fecha();
-        String fechaInicio = fecha.toString(this.actividad.getDatosActividad().getFechaInicio());
-        String fechaFin = fecha.toString(this.actividad.getDatosActividad().getFechaFin());
-        this.comboInicioDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaInicio)));
-        this.comboInicioMes.setSelectedItem(fecha.getMesFecha(fechaInicio));
-        this.comboInicioAno.setSelectedItem(fecha.getAnoFecha(fechaInicio));
-        this.comboFinDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaFin)));
-        this.comboFinMes.setSelectedItem(fecha.getMesFecha(fechaFin));
-        this.comboFinAno.setSelectedItem(fecha.getAnoFecha(fechaFin));
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        Actividad actividad = actividadDao.getActividad(this.idActividad);
+        if (actividad != null){
+            ExperienciaEducativaDAOSql experienciaDao = new ExperienciaEducativaDAOSql();
+            String nombreExperiencia = experienciaDao.getExperienciaEducativa(actividad.getDatosExperiencia().getIdExperiencia()).getNombreExperiencia();
+            this.comboExperiencia.setSelectedItem(nombreExperiencia);
+            AsesorDAOSql asesorDao = new AsesorDAOSql();
+            this.comboAsesor.setSelectedItem(asesorDao.getAsesor(actividad.getDatosExperiencia().getNumeroPersonal()).getNombre());
+            this.comboSalon.setSelectedItem(String.valueOf(actividad.getDatosActividad().getSalon()));
+            this.comboModulo.setSelectedItem(String.valueOf(actividad.getDatosExperiencia().getModulo()));
+            this.comboSeccion.setSelectedItem(String.valueOf(actividad.getDatosExperiencia().getSeccion()));
+            this.comboCupo.setSelectedItem(actividad.getDatosActividad().getCupo());
+            this.textoActividad.setText(actividad.getDatosActividad().getNombreActividad());
+            Fecha fecha = new Fecha();
+            String fechaInicio = fecha.toString(actividad.getDatosActividad().getFechaInicio());
+            String fechaFin = fecha.toString(actividad.getDatosActividad().getFechaFin());
+            this.comboInicioDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaInicio)));
+            this.comboInicioMes.setSelectedItem(fecha.getMesFecha(fechaInicio));
+            this.comboInicioAno.setSelectedItem(fecha.getAnoFecha(fechaInicio));
+            this.comboFinDia.setSelectedItem(String.valueOf(fecha.getDiaFecha(fechaFin)));
+            this.comboFinMes.setSelectedItem(fecha.getMesFecha(fechaFin));
+            this.comboFinAno.setSelectedItem(fecha.getAnoFecha(fechaFin));
+        }else{
+            JOptionPane.showMessageDialog(null, "La actividad no existe :(");
+        }
     }
     public String getMensajeFinal(boolean exito){
         String mensaje = "";
@@ -440,6 +451,9 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             }
         }
         return mensaje;
+    }
+    public void addComunicationListener(ComunicationListener listener){
+        this.comunicationListener = listener;
     }
 
     /**

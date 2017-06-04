@@ -21,7 +21,7 @@ public class Fecha {
         String nombre = "";
         for (int i = 0; i < 12; i++){
             if (numeroMes == i+1){
-                nombre = this.MESES[i+1];
+                nombre = this.MESES[i];
             }
         }
         return nombre;
