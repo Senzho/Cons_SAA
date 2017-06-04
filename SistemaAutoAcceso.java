@@ -3,6 +3,7 @@ package sistemaautoacceso;
 import InterfazGrafica.VentanaEditarAgregarActividad;
 import InterfazGrafica.VentanaInicioSesion;
 import InterfazGrafica.VentanaMostrarActividad;
+import InterfazGrafica.VentanaPrincipalAsesor;
 import InterfazGrafica.VentanaPrincipalCoordinador;
 import InterfazGrafica.VentanaRegistrarActividad;
 import InterfazGrafica.VentanaSeguimiento;
@@ -16,8 +17,9 @@ public class SistemaAutoAcceso {
         Actividad actividad = actividadDao.getActividad(1);*/
         //new VentanaEditarAgregarActividad(true, null);
         //new VentanaMostrarActividad();
-        /*new VentanaSeguimiento();
-        new VentanaRegistrarActividad("1",1,1);*/
+        //new VentanaSeguimiento();
+        
+        //new VentanaRegistrarActividad("1",1,1);*/
         //new VentanaPrincipalCoordinador(null);
         new VentanaInicioSesion();
     }

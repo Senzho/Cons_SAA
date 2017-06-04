@@ -2,6 +2,8 @@ package InterfazGrafica;
 
 import LogicaNegocio.DAO.CoordinadorDAOSql;
 import LogicaNegocio.DAO.InicioSesionDAOSql;
+import LogicaNegocio.DAO.AsesorDAOSql;
+import LogicaNegocio.Entidades.Asesor;
 import LogicaNegocio.Entidades.Coordinador;
 import LogicaNegocio.Logica.CodigoUsuario;
 import LogicaNegocio.Logica.UsuarioEncontrado;
@@ -135,9 +137,14 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
                 }
                 break;
             case 1:
-                /**
-                 * Caso para el usuario "Asesor".
-                 */
+                AsesorDAOSql asesorDao = new AsesorDAOSql();
+                Asesor asesor = asesorDao.getAsesorId(usuario.getUsuarioSistema().getId());
+                if (asesor != null){
+                    new VentanaPrincipalAsesor(asesor);
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, "No se pudo recuperar el usuario");
+                }
                 break;
         }
     }
@@ -145,11 +152,9 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
         this.textoUsuario.setText("");
         this.textoContrasena.setText("");
     }
-
     /**
      * Eventos. 
      */
-    
     @Override
     public void cursorClicked(Button boton) {
         if (boton.equals(this.botonCancelar)){

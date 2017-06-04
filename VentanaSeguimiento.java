@@ -1,10 +1,15 @@
 package InterfazGrafica;
 
+import LogicaNegocio.DAO.ActividadDAOSql;
+import LogicaNegocio.Entidades.Actividad;
+import LogicaNegocio.Entidades.ActividadRegistrada;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -13,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class VentanaSeguimiento extends JFrame{
+public class VentanaSeguimiento extends JFrame implements ListListener{
     private Container contenedor;
     private ComboBox comboModulo;
     private ComboBox comboSeccion;
@@ -21,6 +26,8 @@ public class VentanaSeguimiento extends JFrame{
     private Button botonSalir;
     private JPanel panelActividades;
     private JTextArea textAreaObservacion;
+    private  ActividadDAOSql actividadDao;
+    private ArrayList<ActividadRegistrada> listaActividades;
     
     public VentanaSeguimiento(){
         this.inicializarComponentes();
@@ -43,6 +50,8 @@ public class VentanaSeguimiento extends JFrame{
         this.inicializarPanelSuperior();
         this.inicializarPanelCentral();
         this.inicializarPanelInferior();
+        getListaActividadesRegistradas();
+        mostrarActividadesRegistradas();
     }
     public void inicializarPanelSuperior(){
         JPanel panelSuperior = new JPanel();
@@ -145,5 +154,46 @@ public class VentanaSeguimiento extends JFrame{
         this.textAreaObservacion.setWrapStyleWord(true);
         this.textAreaObservacion.setLineWrap(true);
         this.textAreaObservacion.setBackground(null);
+    }
+    public void getListaActividadesRegistradas(){
+        actividadDao = new ActividadDAOSql(); //borrar el "1"
+        this.listaActividades = actividadDao.getListaActividadesRegistradas(1);
+    }
+    public void mostrarActividadesRegistradas(){
+        Actividad actividad;
+        Fecha fecha = new Fecha();
+        int modulo = Integer.parseInt(this.comboModulo.getSelectedItem());
+        int seccion = Integer.parseInt(this.comboSeccion.getSelectedItem());
+        panelActividades.removeAll();
+        for(int i= 0; i< this.listaActividades.size(); i++){
+           actividad = actividadDao.getActividad(listaActividades.get(i).getIdActividad());
+           if(actividad.getDatosExperiencia().getModulo() == modulo && actividad.getDatosExperiencia().getSeccion() == seccion){
+                JPanel panelActividad = new JPanel();
+                panelActividad.setLayout(new BorderLayout());
+                panelActividad.add(new JLabel("Actividad: "+actividad.getDatosActividad().getNombreActividad()),BorderLayout.NORTH);
+                panelActividad.add(new JLabel("Entrega: "+listaActividades.get(i).getFecha()), BorderLayout.CENTER);
+                Date fechaFin = actividad.getDatosActividad().getFechaFin();
+                Date fechaEntrega = listaActividades.get(i).getFecha();
+                boolean valido = fecha.validarFechas(fechaFin, fechaEntrega);
+                if(valido){
+                     panelActividad.add(new JLabel("Entrego a tiempo; Si"),BorderLayout.SOUTH);
+                }else{
+                    panelActividad.add(new JLabel("Entrego a tiempo: No"),BorderLayout.SOUTH);
+                }
+                this.panelActividades.add(panelActividad);
+           }
+        }
+        panelActividades.setVisible(false);
+        panelActividades.setVisible(true);
+    }
+
+    @Override
+    public void ItemSelected(ComboBox combo) {
+        if(combo.equals(this.comboModulo)){
+            mostrarActividadesRegistradas();
+        }
+        if(combo.equals(this.comboSeccion)){
+            mostrarActividadesRegistradas();
+        }
     }
 }
