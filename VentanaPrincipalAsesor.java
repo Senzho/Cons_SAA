@@ -4,12 +4,15 @@ import LogicaNegocio.Entidades.Asesor;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class VentanaPrincipalAsesor extends JFrame implements CursorListener {
+public class VentanaPrincipalAsesor extends JFrame implements CursorListener, WindowListener {
     private Button btnPerfil;
     private Button btnCerrarSesion;
     private Button btnReportes;
@@ -27,10 +30,15 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener {
     private Asesor asesor;
     
     public VentanaPrincipalAsesor(Asesor asesor){
-        inicializarComponentes();
-        configurarVentana();
-        agregarComponentes();
         this.asesor = asesor;
+        if (this.asesor == null){
+            JOptionPane.showMessageDialog(null, "El usuario esta vacío");
+            regresarInicioSesion();
+        }else{
+            inicializarComponentes();
+            configurarVentana();
+            agregarComponentes();
+        }
     }
     public void inicializarComponentes(){
         btnPerfil = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/IconoEditarOscuro.png")), "Perfil");
@@ -51,10 +59,10 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener {
     }
     public void configurarVentana(){
         setTitle("Sistema Autoacceso-UV");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(840,480);
         setLocationRelativeTo(null);
         setVisible(true);
+        this.addWindowListener(this);
     }
     public void agregarComponentes(){
         panelVentana.setLayout(new BorderLayout());
@@ -67,7 +75,7 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener {
          * 
          */
         panelBotonesSuperior.setLayout(new BorderLayout());
-        panelBotonesSuperior.add(this.lblNombreAsesor = new JLabel(asesor.getNombre()), BorderLayout.LINE_START);
+        panelBotonesSuperior.add(this.lblNombreAsesor = new JLabel("   "+asesor.getNombre()+"   "), BorderLayout.LINE_START);
         panelBotonesSuperior.add(this.btnCerrarSesion.getButton(), BorderLayout.LINE_END);
         panelPerfil.setLayout(new BorderLayout());
         panelPerfil.setBackground(new Colores().getColorBase());
@@ -89,14 +97,46 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener {
         panelVentana.add(panelBotonesSuperior, BorderLayout.NORTH);
         panelVentana.add(panelBotonesInferior, BorderLayout.SOUTH);
     }
+    public void regresarInicioSesion(){
+        new VentanaInicioSesion();
+        dispose();
+    }
 
     @Override
     public void cursorClicked(Button boton) {
        if (boton.equals(this.btnCerrarSesion)){
-            new VentanaInicioSesion();
-            dispose();
+            regresarInicioSesion();
         }else if(boton.equals(this.btnRegistrarActividades)){
             new VentanaBuscarAlumno(asesor);
         }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent we) {
+        
+    }
+    @Override
+    public void windowClosing(WindowEvent we) {
+        regresarInicioSesion();
+    }
+    @Override
+    public void windowClosed(WindowEvent we) {
+        
+    }
+    @Override
+    public void windowIconified(WindowEvent we) {
+        
+    }
+    @Override
+    public void windowDeiconified(WindowEvent we) {
+        
+    }
+    @Override
+    public void windowActivated(WindowEvent we) {
+        
+    }
+    @Override
+    public void windowDeactivated(WindowEvent we) {
+        
     }
 }
