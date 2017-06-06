@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 public class Inscripcion {
     private int idInscripcion;
-    private String estadoInscripcion;
+    private int estadoInscripcion;
     private int numeroInscripcion;
     private int calificacionFinal;
     private Curso curso;
 
-    public Inscripcion(int idInscripcion, String estadoInscripcion, int numeroInscripcion, int calificacionFinal, Curso curso) {
+    public Inscripcion(int idInscripcion, int estadoInscripcion, int numeroInscripcion, int calificacionFinal, Curso curso) {
         this.idInscripcion = idInscripcion;
         this.estadoInscripcion = estadoInscripcion;
         this.numeroInscripcion = numeroInscripcion;
@@ -22,10 +22,10 @@ public class Inscripcion {
     public void setIdInscripcion(int idInscripcion) {
         this.idInscripcion = idInscripcion;
     }
-    public String getEstadoInscripcion() {
+    public int getEstadoInscripcion() {
         return estadoInscripcion;
     }
-    public void setEstadoInscripcion(String estadoInscripcion) {
+    public void setEstadoInscripcion(int estadoInscripcion) {
         this.estadoInscripcion = estadoInscripcion;
     }
     public int getNumeroInscripcion() {
