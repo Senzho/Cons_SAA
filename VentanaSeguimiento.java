@@ -3,6 +3,9 @@ package InterfazGrafica;
 import LogicaNegocio.DAO.ActividadDAOSql;
 import LogicaNegocio.Entidades.Actividad;
 import LogicaNegocio.Entidades.ActividadRegistrada;
+import LogicaNegocio.Entidades.Inscripcion;
+import LogicaNegocio.DAO.UsuarioDAOSql;
+import LogicaNegocio.Entidades.Usuario;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
@@ -10,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,7 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class VentanaSeguimiento extends JFrame implements ListListener{
+public class VentanaSeguimiento extends JFrame implements ListListener, CursorListener{
+    private Inscripcion inscripcion;
     private Container contenedor;
     private ComboBox comboModulo;
     private ComboBox comboSeccion;
@@ -28,8 +33,17 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
     private JTextArea textAreaObservacion;
     private  ActividadDAOSql actividadDao;
     private ArrayList<ActividadRegistrada> listaActividades;
+    private String matricula;
+    private String numeroPersonal;
+    private int idInscripcion;
+    private int idExperiencia;
     
-    public VentanaSeguimiento(){
+    public VentanaSeguimiento(Inscripcion inscripcion, String matricula,String numeroPersonal, int idInscripcion, int idExperiencia){
+        this.inscripcion = inscripcion;
+        this.matricula = matricula;
+        this.numeroPersonal = numeroPersonal;
+        this.idInscripcion = idInscripcion;
+        this.idExperiencia = idExperiencia;
         this.inicializarComponentes();
         this.establecerPropiedades();
         CombosModuloSeccion combos = new CombosModuloSeccion();
@@ -38,9 +52,9 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         setTitle("Seguimiento");
         setSize(730,480);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        //setIconImage(new ImageIcon(getClass().getResource("/RecursosGraficos/iconoDrakzo3.png")).getImage());
         setVisible(true);
+        getListaActividadesRegistradas();
+        mostrarActividadesRegistradas();
     }
     
     public void inicializarComponentes(){
@@ -50,8 +64,6 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         this.inicializarPanelSuperior();
         this.inicializarPanelCentral();
         this.inicializarPanelInferior();
-        getListaActividadesRegistradas();
-        mostrarActividadesRegistradas();
     }
     public void inicializarPanelSuperior(){
         JPanel panelSuperior = new JPanel();
@@ -62,9 +74,11 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         /**
          * Primera fila.
          */
-        JLabel labelNombre = new JLabel(/*Nombre del alumno*/"Primitivo Cruz Hernández");
-        JLabel labelInscripcion = new JLabel(/*Numero de inscripción del alumno*/"Inscripción: "+"1°a");
-        JLabel labelEstado = new JLabel(/*Estado del alumno*/"Estado: "+"Regular");
+        UsuarioDAOSql usuarioDao = new UsuarioDAOSql();
+        Usuario usuario = usuarioDao.getUsuario(this.matricula);
+        JLabel labelNombre = new JLabel(/*Nombre del alumno*/usuario.getNombre());
+        JLabel labelInscripcion = new JLabel(/*Numero de inscripción del alumno*/"Inscripción: "+inscripcion.getNumeroInscripcion()+"° oprtunidad");
+        JLabel labelEstado = new JLabel(/*Estado del alumno*/"Estado: "+inscripcion.getEstadoInscripcion());
         FlowLayout flowPrimeraFila = new FlowLayout(FlowLayout.LEFT);
         flowPrimeraFila.setHgap(10);
         JPanel panelPrimeraFila = new JPanel(flowPrimeraFila);
@@ -76,7 +90,7 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         /**
          * Segunda fila.
          */
-        JLabel labelCurso = new JLabel(/*Curso del alumno*/"Curso: "+"Inglés 1. Febrero - Julio 2017");
+        JLabel labelCurso = new JLabel(/*Curso del alumno*/"Curso: "+inscripcion.getCurso().getNombreCurso());
         FlowLayout flowSegundaFila = new FlowLayout(FlowLayout.LEFT);
         flowSegundaFila.setHgap(10);
         JPanel panelSegundaFila = new JPanel(flowSegundaFila);
@@ -99,6 +113,8 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         panelTerceraFila.add(labelSeccion);
         panelTerceraFila.add(this.comboSeccion.getComboBox());
         panelSuperior.add(panelTerceraFila);
+        comboModulo.addListListener(this);
+        comboSeccion.addListListener(this);
     }
     public void inicializarPanelCentral(){
         JPanel panelCentral = new JPanel();
@@ -112,6 +128,7 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
          */
         JLabel labelActividades = new JLabel("Actividades realizadas:");
         this.panelActividades = new JPanel();
+        panelActividades.setBorder(BorderFactory.createLineBorder(panelActividades.getBackground(),10));
         BoxLayout boxPanelActividades = new BoxLayout(this.panelActividades, BoxLayout.Y_AXIS);
         this.panelActividades.setLayout(boxPanelActividades);
         JScrollPane scrollActividades = new JScrollPane(this.panelActividades);
@@ -146,6 +163,8 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         this.botonSalir = new Button(new Colores(), new ImageIcon(getClass().getResource("/RecursosGraficos/iconoEliminarOscuro.png")), "Salir");
         panelInferior.add(this.botonRegistrar.getButton());
         panelInferior.add(this.botonSalir.getButton());
+        this.botonRegistrar.addCursorListener(this);
+        this.botonSalir.addCursorListener(this);
     }
     public void establecerPropiedades(){
         this.contenedor.setBackground(new Colores().getColorBase());
@@ -156,8 +175,8 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         this.textAreaObservacion.setBackground(null);
     }
     public void getListaActividadesRegistradas(){
-        actividadDao = new ActividadDAOSql(); //borrar el "1"
-        this.listaActividades = actividadDao.getListaActividadesRegistradas(1);
+        actividadDao = new ActividadDAOSql();
+        this.listaActividades = actividadDao.getListaActividadesRegistradas(this.inscripcion.getIdInscripcion());
     }
     public void mostrarActividadesRegistradas(){
         Actividad actividad;
@@ -169,6 +188,8 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
            actividad = actividadDao.getActividad(listaActividades.get(i).getIdActividad());
            if(actividad.getDatosExperiencia().getModulo() == modulo && actividad.getDatosExperiencia().getSeccion() == seccion){
                 JPanel panelActividad = new JPanel();
+                panelActividad.setBackground(new Colores().getColorBase());
+                panelActividad.setBorder(BorderFactory.createLineBorder(panelActividades.getBackground(),10));
                 panelActividad.setLayout(new BorderLayout());
                 panelActividad.add(new JLabel("Actividad: "+actividad.getDatosActividad().getNombreActividad()),BorderLayout.NORTH);
                 panelActividad.add(new JLabel("Entrega: "+listaActividades.get(i).getFecha()), BorderLayout.CENTER);
@@ -176,7 +197,7 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
                 Date fechaEntrega = listaActividades.get(i).getFecha();
                 boolean valido = fecha.validarFechas(fechaFin, fechaEntrega);
                 if(valido){
-                     panelActividad.add(new JLabel("Entrego a tiempo; Si"),BorderLayout.SOUTH);
+                     panelActividad.add(new JLabel("Entrego a tiempo: Si"),BorderLayout.SOUTH);
                 }else{
                     panelActividad.add(new JLabel("Entrego a tiempo: No"),BorderLayout.SOUTH);
                 }
@@ -194,6 +215,15 @@ public class VentanaSeguimiento extends JFrame implements ListListener{
         }
         if(combo.equals(this.comboSeccion)){
             mostrarActividadesRegistradas();
+        }
+    }
+
+    @Override
+    public void cursorClicked(Button boton) {
+        if(boton.equals(this.botonRegistrar)){
+           new VentanaRegistrarActividad(this.numeroPersonal, this.idInscripcion, this.idExperiencia);
+        }else if(boton.equals(this.botonSalir)){
+            dispose();
         }
     }
 }

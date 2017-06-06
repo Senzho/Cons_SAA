@@ -55,6 +55,7 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener, Wi
         panelBotonesDerecho = new JPanel();
         panelCentral = new JPanel();
         btnRegistrarActividades.addCursorListener(this);
+        this.btnseguimientoAlumno.addCursorListener(this);
         btnCerrarSesion.addCursorListener(this);
     }
     public void configurarVentana(){
@@ -107,7 +108,9 @@ public class VentanaPrincipalAsesor extends JFrame implements CursorListener, Wi
        if (boton.equals(this.btnCerrarSesion)){
             regresarInicioSesion();
         }else if(boton.equals(this.btnRegistrarActividades)){
-            new VentanaBuscarAlumno(asesor);
+            new VentanaBuscarAlumno(asesor,true);
+        }else if(boton.equals(this.btnseguimientoAlumno)){
+            new VentanaBuscarAlumno(asesor,false);
         }
     }
 

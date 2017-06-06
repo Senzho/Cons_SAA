@@ -23,7 +23,7 @@ public class InscripcionDAOSql implements InscripcionDAO {
             ResultSet resultadoConsulta = orden.executeQuery();
             while (resultadoConsulta.next()){
                 int idInscripcion = resultadoConsulta.getInt(1);
-                int estadoInscripcion = resultadoConsulta.getInt(2);
+                String estadoInscripcion = resultadoConsulta.getString(2);
                 int numeroInscripcion = resultadoConsulta.getInt(4);
                 int calificacionFinal = resultadoConsulta.getInt(3);
                 int nrc = resultadoConsulta.getInt(6);

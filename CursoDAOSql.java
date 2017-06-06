@@ -22,8 +22,10 @@ public class CursoDAOSql implements CursoDAO{
             if (resultadoConsulta.first()){
                 int capacidadCupo = resultadoConsulta.getInt(1);
                 String nombreCurso= resultadoConsulta.getString(2);
+                String idioma = resultadoConsulta.getString(5);
+                int idExperiencia = resultadoConsulta.getInt(6);
                 //ArrayList<Modulo> modulos;
-                curso = new Curso(capacidadCupo, nombreCurso, nrc, null);
+                curso = new Curso(capacidadCupo, nombreCurso, nrc, null,idioma, idExperiencia);
             }else{
                 Logger logger = Logger.getLogger("Logger");
                 logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");

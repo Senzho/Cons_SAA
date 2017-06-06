@@ -52,7 +52,6 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         setTitle("Registrar actividad");
         setSize(400,480);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
     public void configurar(){
@@ -191,30 +190,54 @@ public class VentanaRegistrarActividad extends JFrame implements CursorListener,
         }
         JOptionPane.showMessageDialog(null, mensaje);
     }
-
+    public ArrayList<ActividadRegistrada> listaActividadesRegistradas(){
+        ArrayList<ActividadRegistrada> listaActividades;
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        listaActividades = actividadDao.getListaActividadesRegistradas(idInscripcion);
+        return listaActividades;
+    }
+    public boolean validarActividadRegistrada(String nombreActividad){
+        boolean valido = true;
+        ArrayList<ActividadRegistrada> listaActividadesRegistradas = listaActividadesRegistradas();
+        Actividad actividad = null;
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+       for(int i = 0; i<listaActividadesRegistradas.size(); i++){
+           actividad = actividadDao.getActividad(listaActividadesRegistradas.get(i).getIdActividad());
+           if(actividad.getDatosActividad().getNombreActividad().equals(nombreActividad)){
+               valido = false;
+               break;
+           }
+       }
+       return valido;
+    }
     @Override
     public void cursorClicked(Button boton) {
         if(boton.equals(btnRegistrar)){
             String nombreActividad = this.comboActividad.getSelectedItem();
             String observacion = this.txtObservacion.getText();
             CodigoActividad codigo = validarDatos(observacion, nombreActividad);
-            if (codigo.equals(CodigoActividad.datosValidos)){
-                ActividadDAOSql actividadDao = new ActividadDAOSql();
-                int porcentaje = Integer.parseInt(this.comboPuntaje.getSelectedItem());
-                Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
-                int idActividad = actividadDao.getIdActividad(nombreActividad);
-                ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
-                boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
-                String mensaje="";
-                if (exito){
-                    mensaje = "Actividad registrada con éxito";
-                    this.txtObservacion.setText("");
+            boolean valido = validarActividadRegistrada(nombreActividad);
+            if(valido == true){
+                if (codigo.equals(CodigoActividad.datosValidos)){
+                    ActividadDAOSql actividadDao = new ActividadDAOSql();
+                    int porcentaje = Integer.parseInt(this.comboPuntaje.getSelectedItem());
+                    Date fecha = java.sql.Date.valueOf(this.lblFecha.getText());
+                    int idActividad = actividadDao.getIdActividad(nombreActividad);
+                    ActividadRegistrada actividadRegistrada = new ActividadRegistrada(porcentaje, fecha, observacion, idActividad);
+                    boolean exito = actividadDao.registrarActividad(actividadRegistrada, idInscripcion, numeroPersonal);
+                    String mensaje="";
+                    if (exito){
+                        mensaje = "Actividad registrada con éxito";
+                        this.txtObservacion.setText("");
+                    }else{
+                        mensaje = "No se pudo registrar la actividad";
+                    }
+                    JOptionPane.showMessageDialog(null, mensaje);
                 }else{
-                    mensaje = "No se pudo registrar la actividad";
+                    mostrarMensajeError(codigo);
                 }
-                JOptionPane.showMessageDialog(null, mensaje);
             }else{
-                mostrarMensajeError(codigo);
+                JOptionPane.showMessageDialog(null,"la actividad ya ha sido registrada anteriormente");
             }
         }if (boton.equals(this.btnCancelar)){
             dispose();
