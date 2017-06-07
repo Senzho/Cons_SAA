@@ -11,6 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AsesorDAOSql implements AsesorDAO{
+    /**
+     * El metodo getListaAsesores() de tipo ArrayList<Asesor> regresa una lista con todos los asesores 
+     * encotrados enel sistema
+     * @return listaAsesores parametro de tipo ArrayList<Asesor> que contiene todos los asesores 
+     * encotrados en el sistema
+     */
     @Override
     public ArrayList<Asesor> getListaAsesores() {
         ArrayList<Asesor> listaAsesores = new ArrayList();
@@ -40,6 +46,15 @@ public class AsesorDAOSql implements AsesorDAO{
         }
         return listaAsesores;
     }
+    /**
+     * el metodo getAsesorId() recibe un parametro de tipo entero que sirve como identificador
+     * un objeto del tipo Asesor 
+     * @param idUsuarioSistema parametro requerido de tipo entero que funciona como identifiador de un 
+     * objeto del tipo Asesor
+     * @return asesor parametro del tipo Asesor resultado de la consulta con el parametro de tipo 
+     * entero idUsuarioSistema
+     */
+    @Override
     public Asesor getAsesorId(int idUsuarioSistema){
          Asesor asesor = null;
         ConexionSQL conexionSql = new ConexionSQL();
@@ -70,6 +85,14 @@ public class AsesorDAOSql implements AsesorDAO{
         }
         return asesor;
     }
+    /**
+     * El metodo getAsesor() de tipo Asesor recibe como parametro un parametro de tipo String 
+     * referente a un objeto del tipo Asesor 
+     * @param numeroPersonal parametro de tipo String requerido para la busqueda de un objeto tipo
+     * Asesor 
+     * @return asesor parametro del tipo Asesor, resultado de la consulta con el parametro de tipo String 
+     * numeroPersonal
+     */
     @Override
     public Asesor getAsesor(String numeroPersonal) {
         Asesor asesor = null;

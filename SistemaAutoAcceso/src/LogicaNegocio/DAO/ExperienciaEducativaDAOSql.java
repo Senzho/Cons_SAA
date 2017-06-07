@@ -11,6 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ExperienciaEducativaDAOSql implements ExperienciaEducativaDAO{
+    /**
+     * El metodo getListaExperiencias() funciona para regresar una lista de todas las experiencias educativas
+     * existentes en el sistema
+     * @return listaExperiencias parametro del tipo ArrayList<ExperienciaEducativa> que contiene todas las 
+     * experiencias educativas existentes en el sistema
+     */
     @Override
     public ArrayList<ExperienciaEducativa> getListaExperiencias() {
         ArrayList<ExperienciaEducativa> listaExperiencias = new ArrayList();
@@ -34,6 +40,13 @@ public class ExperienciaEducativaDAOSql implements ExperienciaEducativaDAO{
         }
         return listaExperiencias;
     }
+    /**
+     * El metodo getExperienciaEducativa() del tipo ExperienciaEducativa recibe un parametro de tipo entero 
+     * para la busqueda de los datos de un objeto del tipo ExperienciaEducativa 
+     * @param idExperiencia parametro de tipo entero usado para la consulta entre objetos de tipo experienciaEducativa
+     * @return experienciaEducativa Parametro de tipo ExperienciaEducativa resultado de la consulta con el parametro
+     * idExperiencia
+     */
     @Override
     public ExperienciaEducativa getExperienciaEducativa(int idExperiencia){
         ConexionSQL conexionSql = new ConexionSQL();

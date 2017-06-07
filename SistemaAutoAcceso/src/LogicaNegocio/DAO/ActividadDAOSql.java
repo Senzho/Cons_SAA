@@ -15,6 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ActividadDAOSql implements ActividadDAO{
+    /**
+     * El metodo getIdActividad() recibe el nombre de una actividad, este es de tipo String y regresa
+     * el identificador de la actividad de tipo entero que coincida con el nombre de la actividad 
+     * @param nombreActividad parametro requerido de tipo String recibido por el metodo getIdActividad 
+     * con el cual se inicia la busqueda de la actividad en la base de datos
+     * @return idActividad Identificador de la actividad que coincide con los valores recibidos (nombreActividad)
+     */
     @Override
     public int getIdActividad(String nombreActividad){
         int idActividad = -1;
@@ -39,6 +46,13 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return idActividad;
     }
+    /**
+     * El metodo agregarActividad() tiene la funcionalidad de agregar un nuevo registro del tipo Actividad 
+     * a la base de datos en el sistema
+     * @param actividad Parametro de tipo Actividad perteneciente a la actividad que se desea agregar a la base de datos 
+     * @return registroExitoso este es un valor booleano, con el se identifica si el registro fue almacenado con exito 
+     * o existe algun impedimento al guardar los datos 
+     */
     @Override
     public boolean agregarActividad(Actividad actividad){
         boolean registroExitoso = false;
@@ -68,6 +82,14 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return registroExitoso;
     }
+    /**
+     * Metodo getIdActividad() recibe como parametros un idActividad (valor de tipo entero) con el cual se 
+     * buscara en la base de datos una actividad con dicho identificador 
+     * @param idActividad Parametro de tipo entero perteneciente a una actividad que se desea buscar en la base
+     * de datos
+     * @return actividad Parametro de tipo Actividad al que pertenece el identificador idActividad encontrado en
+     * la base de datos
+     */
     @Override
     public Actividad getActividad(int idActividad) {
         Actividad actividad = null;
@@ -102,6 +124,11 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return actividad;
     }
+    /**
+     * El metodo getListaActividades retorna una lista de todas las actividades existentes en el sistema
+     * @return listaActividades variable del tipo ArrayList de actividades que contiene todas las actividades
+     * existentes en el sistema
+     */
     @Override
     public ArrayList<Actividad> getListaActividades(){
         ArrayList<Actividad> listaActividades = new ArrayList<>();
@@ -134,6 +161,15 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return listaActividades;
     }
+    /**
+     * El metodo getListaActividades funciona para mostrar las actividade pertenecientes a una experiencieeducativa
+     * el modulo y la seccion a la que pertenecen
+     * @param idExperiencia identificador de tipo entero que muestra a que experienciaEducativa pertenece la actividad
+     * @param modulo identificador de tipo entero que muestra el modulo al que pertenece una actividad
+     * @param seccion identificador de tipo entero que muestra a que seccion pertenece una actividad
+     * @return actividades parametro del tipo ArrayList<Actividad> coincidentes a los filtros de busqueda de modulo 
+     * y seccion
+     */
     @Override
     public ArrayList<Actividad> getListaActividades(int idExperiencia, int modulo, int seccion) {
         ArrayList<Actividad> actividades = new ArrayList<>();
@@ -166,6 +202,16 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return actividades;
     }
+    /**
+     * El metodo registrarActividad del tipo booleano funciona para registrar una actividad  perteneciente a un modulo
+     * y a una inscripcion
+     * @param actividad Parametro del tipo ActividadRegistrada que contiene los datos de una actividad  que se desa guardar
+     * @param idInscripcion Parametro de tipo entero que indica a que usuario (o inscripcion de un usario) pertenece la 
+     * actividad que se desea guardar
+     * @param numeroPersonal parametro del tipo String que indica que clase registra la actividad
+     * @return registroExitoso parametro del tipo booleano que muestra si el registro fue exitoso o si existe algun impedimento
+     * para almacenar los datos
+     */
     @Override
     public boolean registrarActividad(ActividadRegistrada actividad, int idInscripcion, String numeroPersonal) {
         boolean registroExitoso = false;
@@ -191,6 +237,14 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return registroExitoso;
     }
+    /**
+     * El metodo getListaActividadesRegistradas() recibe un argumento de tipo entero que funciona para poder
+     * obtener todas las actividades registradas en un curso pertenecientes a la inscripcion de un usuario
+     * @param idInscripcion Parametro de tipo entero perteneciente a una inscripcion que funciona para buscar 
+     * todas las actividades pertenecientes a una inscripcion
+     * @return actividadesRegistradas parametro del tipo arrayList de ActividadesRegistradas que retorna todas las
+     * actividades encontradas en el sistema pertenecientes a una inscripcion
+     */
     @Override
     public ArrayList<ActividadRegistrada> getListaActividadesRegistradas(int idInscripcion) {
         ArrayList<ActividadRegistrada> actividadesRegistradas = new ArrayList<>();
@@ -215,6 +269,12 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return actividadesRegistradas;
     }
+    /**
+     * El metodo de tipo booleanoactiualizarActividad() recibe un parametro del tipo Actividad 
+     * @param actividad Parametro requerido del tipo actividad que funciona para editar los datos de una actividad
+     * @return actualizada Parametro del tipo booleano que funciona para indicar si una actividad fue actualizada con
+     * exito o si existe algun inconveniente para editar sus datos
+     */
     @Override
     public boolean actiualizarActividad(Actividad actividad) {
         boolean actualizada = false;
@@ -243,6 +303,14 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return actualizada;
     }
+    /**
+     * El metodo eliminarActividad() recibe como parametros un identificador de tipo entero perteneciente a una 
+     * actividad y funciona para eliminar una actividad del sistema.
+     * @param idActividad Parametro de tipo entero perteneciente a una actividad existente en el sistema que se 
+     * quiera eliminar.
+     * @return eliminada Parametro de tipo booleano que identifica si una actividad fue eliminada con exito o si
+     * existe algun impedimento para eliminarla.
+     */
     @Override
     public boolean eliminarActividad(int idActividad) {
         boolean eliminada = false;
@@ -261,6 +329,10 @@ public class ActividadDAOSql implements ActividadDAO{
         }
         return eliminada;
     }
+    /**
+     * 
+     * @return 
+     */
     @Override
     public int getUltimoId(){
         int ultimoId = 0;
