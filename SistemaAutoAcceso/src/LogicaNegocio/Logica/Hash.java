@@ -4,10 +4,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Hash {
+    private final String ALGORITMO = "MD5";
+    
     public String hash(String cadena){
         String hash = "";
         try{
-            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            MessageDigest messageDigest = MessageDigest.getInstance(this.ALGORITMO);
             byte[] bytes = messageDigest.digest(cadena.getBytes());
             int tamano = bytes.length;
             StringBuffer stringBuffer = new StringBuffer(tamano);

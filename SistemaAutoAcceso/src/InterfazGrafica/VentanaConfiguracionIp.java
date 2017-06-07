@@ -1,5 +1,6 @@
 package InterfazGrafica;
 
+import LogicaNegocio.Logica.ArchivoIp;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -9,14 +10,17 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class VentanaConfiguracionIp extends JFrame implements FocusListener, CursorListener{
+public class VentanaConfiguracionIp extends JFrame implements FocusListener, CursorListener, KeyListener{
     private Container contenedor;
     private JTextField texto1;
     private JTextField texto2;
@@ -109,11 +113,23 @@ public class VentanaConfiguracionIp extends JFrame implements FocusListener, Cur
     }
     public void establecerPropiedades(){
         this.texto1.addFocusListener(this);
+        this.texto1.addKeyListener(this);
         this.texto2.addFocusListener(this);
+        this.texto2.addKeyListener(this);
         this.texto3.addFocusListener(this);
+        this.texto3.addKeyListener(this);
         this.texto4.addFocusListener(this);
+        this.texto4.addKeyListener(this);
         this.botonCancelar.addCursorListener(this);
         this.botonOk.addCursorListener(this);
+    }
+    public boolean direccionValida(int a, int b, int c, int d){
+        boolean valida = false;
+        int maximo = 226;
+        if (a < maximo && b < maximo && c < maximo && d < maximo){
+            valida = true;
+        }
+        return valida;
     }
 
     /**
@@ -152,7 +168,46 @@ public class VentanaConfiguracionIp extends JFrame implements FocusListener, Cur
         if (boton.equals(this.botonCancelar)){
             dispose();
         }else if (boton.equals(this.botonOk)){
-            
+            String texto1 = this.texto1.getText();
+            String texto2 = this.texto2.getText();
+            String texto3 = this.texto3.getText();
+            String texto4 = this.texto4.getText();
+            String mensaje = "La dirección no es válida";
+            if (!texto1.equals("") && !texto2.equals("") && !texto3.equals("") && !texto4.equals("")){
+                int a = Integer.valueOf(texto1);
+                int b = Integer.valueOf(texto2);
+                int c = Integer.valueOf(texto3);
+                int d = Integer.valueOf(texto4);
+                if (direccionValida(a,b,c,d)){
+                    String direccionIp = texto1+"."+this.texto2.getText()+"."+texto3+"."+texto4;
+                    ArchivoIp archivoIp = new ArchivoIp();
+                    archivoIp.guardarIp(direccionIp);
+                    dispose();
+                }else{
+                    JOptionPane.showMessageDialog(null, mensaje);
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, mensaje);
+            }  
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent evento) {
+        Object objetoFuente = evento.getSource();
+        if (objetoFuente instanceof JTextField){
+            JTextField texto = (JTextField) objetoFuente;
+            if (!Character.isDigit(evento.getKeyChar()) || texto.getText().length()==3){
+                evento.consume();
+            }
+        }
+    }
+    @Override
+    public void keyPressed(KeyEvent evento) {
+        
+    }
+    @Override
+    public void keyReleased(KeyEvent evento) {
+        
     }
 }

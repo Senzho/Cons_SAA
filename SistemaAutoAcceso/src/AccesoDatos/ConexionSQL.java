@@ -1,5 +1,6 @@
 package AccesoDatos;
 
+import LogicaNegocio.Logica.ArchivoIp;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,7 +16,9 @@ public class ConexionSQL {
     public void crearConexion(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            conexion=DriverManager.getConnection("jdbc:mysql://localhost/SistemaAA?user=nemesis&password=sisemen");
+            ArchivoIp archivoIp = new ArchivoIp();
+            String ip = archivoIp.getDireccionIp();
+            conexion=DriverManager.getConnection("jdbc:mysql://"+ip+"/SistemaAA?user=nemesis&password=sisemen");
         }catch(ClassNotFoundException | SQLException excepcion){
             Logger logger = Logger.getLogger("Logger");
             logger.log(Level.SEVERE, "No se encuentra la clase | no se puedo acceder a la base "
