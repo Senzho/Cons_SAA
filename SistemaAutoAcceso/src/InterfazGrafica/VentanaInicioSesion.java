@@ -19,14 +19,16 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class VentanaInicioSesion extends JFrame implements CursorListener{
     private Container contenedor;
     private JTextField textoUsuario;
-    private JTextField textoContrasena;
+    private JPasswordField textoContrasena;
     private Button botonIniciar;
     private Button botonCancelar;
+    private Button botonIp;
     private JLabel imagenUv;
     private Colores colores;
     
@@ -34,7 +36,7 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
         this.colores = new Colores();
         inicializarComponentes();
         establecerPropiedades();
-        setSize(280,380);
+        setSize(280,420);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,7 +50,12 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
         this.contenedor.setBackground(this.colores.getColorBase());
         this.imagenUv = new JLabel();
         this.imagenUv.setIcon(new ImageIcon(getClass().getResource("/RecursosGraficos/iconoUV.png")));
-        this.contenedor.add(this.imagenUv, BorderLayout.PAGE_START);
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.setBackground(this.colores.getColorBase());
+        panelSuperior.add(this.imagenUv, BorderLayout.CENTER);
+        this.botonIp = new Button(this.colores, new ImageIcon(getClass().getResource("/RecursosGraficos/iconoEditarOscuro.png")), "Configurar IP");
+        panelSuperior.add(this.botonIp.getButton(), BorderLayout.PAGE_START);
+        this.contenedor.add(panelSuperior, BorderLayout.PAGE_START);
         /**
          * Panel central.
          */
@@ -80,7 +87,7 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
         constantes.gridwidth = 2;
         constantes.fill = GridBagConstraints.BOTH;
         constantes.weightx = 1;
-        this.textoContrasena = new JTextField();
+        this.textoContrasena = new JPasswordField();
         panelCentral.add(this.textoContrasena, constantes);
         this.contenedor.add(panelCentral, BorderLayout.CENTER);
         /**
@@ -100,16 +107,21 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
     public void establecerPropiedades(){
         this.botonCancelar.addCursorListener(this);
         this.botonIniciar.addCursorListener(this);
+        this.botonIp.addCursorListener(this);
     }
     public void validarUsuario(String usuario, String contrasena){
         InicioSesionDAOSql inicioSesionDao = new InicioSesionDAOSql();
         UsuarioEncontrado usuarioEncontrado = inicioSesionDao.buscarUsuario(usuario, contrasena);
-        CodigoUsuario codigo = usuarioEncontrado.getCodigo();
-        if (codigo.equals(CodigoUsuario.usuarioValido)){
-            ingresarSistema(usuarioEncontrado);
+        if (usuarioEncontrado != null){
+            CodigoUsuario codigo = usuarioEncontrado.getCodigo();
+            if (codigo.equals(CodigoUsuario.usuarioValido)){
+                ingresarSistema(usuarioEncontrado);
+            }else{
+                mostrarMensajeError(codigo);
+                borrarCampos();
+            }
         }else{
-            mostrarMensajeError(codigo);
-            borrarCampos();
+            JOptionPane.showMessageDialog(null, "Lo sentimos no se puede conectar con la base de datos :(");
         }
     }
     public void mostrarMensajeError(CodigoUsuario codigo){
@@ -167,6 +179,8 @@ public class VentanaInicioSesion extends JFrame implements CursorListener{
             }else{
                 JOptionPane.showMessageDialog(null, "Ingresa tu usuario y contraseña");
             }
+        }else if(boton.equals(this.botonIp)){
+            new VentanaConfiguracionIp();
         }
     }
 }

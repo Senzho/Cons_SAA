@@ -1,26 +1,21 @@
 package sistemaautoacceso;
 
+import InterfazGrafica.VentanaConfiguracionIp;
 import InterfazGrafica.VentanaEditarAgregarActividad;
 import InterfazGrafica.VentanaInicioSesion;
 import InterfazGrafica.VentanaMostrarActividad;
-import InterfazGrafica.VentanaPrincipalAsesor;
 import InterfazGrafica.VentanaPrincipalCoordinador;
 import InterfazGrafica.VentanaRegistrarActividad;
 import InterfazGrafica.VentanaSeguimiento;
 import LogicaNegocio.DAO.ActividadDAOSql;
 import LogicaNegocio.Entidades.Actividad;
+import LogicaNegocio.Logica.Hash;
+import java.io.FileNotFoundException;
+import java.security.NoSuchAlgorithmException;
 
 public class SistemaAutoAcceso {
 
-    public static void main(String[] args) {
-        /*ActividadDAOSql actividadDao = new ActividadDAOSql();
-        Actividad actividad = actividadDao.getActividad(1);*/
-        //new VentanaEditarAgregarActividad(true, null);
-        //new VentanaMostrarActividad();
-        //new VentanaSeguimiento();
-        
-        //new VentanaRegistrarActividad("1",1,1);*/
-        //new VentanaPrincipalCoordinador(null);
+    public static void main(String[] args) throws NoSuchAlgorithmException {
         new VentanaInicioSesion();
     }
     

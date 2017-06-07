@@ -1,6 +1,5 @@
 package LogicaNegocio.DAO;
 
-import LogicaNegocio.Logica.CodigoUsuario;
 import LogicaNegocio.Logica.UsuarioEncontrado;
 
 public interface InicioSesionDAO {

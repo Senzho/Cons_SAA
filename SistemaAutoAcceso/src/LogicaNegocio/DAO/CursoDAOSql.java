@@ -33,7 +33,7 @@ public class CursoDAOSql implements CursoDAO{
                 curso = new Curso(capacidadCupo, nombreCurso, nrc, null,idioma, idExperiencia);
             }else{
                 Logger logger = Logger.getLogger("Logger");
-                logger.log(Level.WARNING, "No se encuentra la actividad en la base de datos");
+                logger.log(Level.WARNING, "No se encuentra el curso en la base de datos");
             }
         }catch(SQLException | NullPointerException excepcion){
             Logger logger = Logger.getLogger("Logger");

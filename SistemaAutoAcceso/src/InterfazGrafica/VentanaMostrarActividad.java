@@ -93,6 +93,8 @@ public class VentanaMostrarActividad extends JFrame implements SelectionListener
             int idActividadBloque = bloque.getActividad().getDatosActividad().getIdActividad();
             int idActividadLista = bloqueLista.getActividad().getDatosActividad().getIdActividad();
             if (idActividadLista == idActividadBloque){
+                listaBloqueActividades.remove(i);
+                listaBloqueActividades.add(i, bloque);
                 bloque.addSelectionListener(this);
                 panelActividades.remove(bloqueLista.getPanel());
                 panelActividades.add(bloque.getPanel(), i);
@@ -111,6 +113,7 @@ public class VentanaMostrarActividad extends JFrame implements SelectionListener
         for(int i = 0; i< listaBloqueActividades.size(); i++){
             bloqueLista = listaBloqueActividades.get(i);
             if (bloqueLista.getActividad().getDatosActividad().getIdActividad() == idActividad){
+                listaBloqueActividades.remove(i);
                 panelActividades.remove(bloqueLista.getPanel());
                 this.bloqueActividad = null;
             }
@@ -160,20 +163,18 @@ public class VentanaMostrarActividad extends JFrame implements SelectionListener
         }else if (boton.equals(this.btnEliminar)){
             if (this.bloqueActividad != null){
                 int res = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quiere eliminar la actividad?");
-                switch(res){
-                    case 0:
-                        ActividadDAOSql actividadDao = new ActividadDAOSql();
-                        int idActividad = this.bloqueActividad.getActividad().getDatosActividad().getIdActividad();
-                        boolean eliminada = actividadDao.eliminarActividad(idActividad);
-                        String mensaje = "";
-                        if (eliminada){
-                            borrarActividad(idActividad);
-                            mensaje = "Actividad eliminada";
-                        }else{
-                            mensaje = "La actividad no se pudo eliminar :(";
-                        }
-                        JOptionPane.showMessageDialog(null, mensaje);
-                    break;
+                if(res == 0){
+                    ActividadDAOSql actividadDao = new ActividadDAOSql();
+                    int idActividad = this.bloqueActividad.getActividad().getDatosActividad().getIdActividad();
+                    boolean eliminada = actividadDao.eliminarActividad(idActividad);
+                    String mensaje = "";
+                    if (eliminada){
+                        borrarActividad(idActividad);
+                        mensaje = "Actividad eliminada";
+                    }else{
+                        mensaje = "La actividad no se pudo eliminar :(";
+                    }
+                    JOptionPane.showMessageDialog(null, mensaje);
                 }
             }else{
                 JOptionPane.showMessageDialog(null, "No hay actividad seleccionada");

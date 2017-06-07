@@ -328,20 +328,11 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             DatosActividad datosActividad = new DatosActividad(idActividad, nombreActividad, fechaInicioDate, fechaFinDate, cupo, salon);
             DatosExperiencia datosExperiencia = new DatosExperiencia(idExperiencia, Integer.valueOf(modulo), Integer.valueOf(seccion), numeroPersonal);
             Actividad nuevaActividad = new Actividad(datosActividad, datosExperiencia);
-            boolean exito;
-            if (this.tipo){
-                exito = actividadDao.agregarActividad(nuevaActividad);
-                if (this.comunicationListener != null){
-                    this.comunicationListener.actividadAgregada(new BloqueActividad(nuevaActividad));
-                }
+            if (!actividadExistente(nuevaActividad.getDatosActividad().getNombreActividad(), idActividad)){
+                guardarActividad(nuevaActividad);
             }else{
-                exito = actividadDao.actiualizarActividad(nuevaActividad);
-                if (this.comunicationListener != null){
-                    this.comunicationListener.actividadEditada(new BloqueActividad(nuevaActividad));
-                }
+                JOptionPane.showMessageDialog(null, "La actividad ya existe");
             }
-            JOptionPane.showMessageDialog(null, getMensajeFinal(exito));
-            dispose();
         }else{
             mostrarMensajeError(codigo);
         }
@@ -433,6 +424,7 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
             this.comboFinAno.setSelectedItem(fecha.getAnoFecha(fechaFin));
         }else{
             JOptionPane.showMessageDialog(null, "La actividad no existe :(");
+            dispose();
         }
     }
     public String getMensajeFinal(boolean exito){
@@ -454,6 +446,41 @@ public class VentanaEditarAgregarActividad extends JFrame implements CursorListe
     }
     public void addComunicationListener(ComunicationListener listener){
         this.comunicationListener = listener;
+    }
+    public boolean actividadExistente(String nombreActividad, int idActividad){
+        boolean existente = false;
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        ArrayList<Actividad> listaActividades = actividadDao.getListaActividades();
+        int numeroElementos = listaActividades.size();
+        String nombre = "";
+        int id;
+        for(int i = 0; i < numeroElementos; i ++){
+            Actividad actividad = listaActividades.get(i);
+            nombre = actividad.getDatosActividad().getNombreActividad();
+            id = actividad.getDatosActividad().getIdActividad();
+            if (nombre.equals(nombreActividad) && id != idActividad){
+                existente = true;
+                break;
+            }
+        }
+        return existente;
+    }
+    public void guardarActividad(Actividad actividad){
+        boolean exito;
+        ActividadDAOSql actividadDao = new ActividadDAOSql();
+        if (this.tipo){
+            exito = actividadDao.agregarActividad(actividad);
+            if (this.comunicationListener != null){
+                this.comunicationListener.actividadAgregada(new BloqueActividad(actividad));
+            }
+        }else{
+            exito = actividadDao.actiualizarActividad(actividad);
+            if (this.comunicationListener != null){
+                this.comunicationListener.actividadEditada(new BloqueActividad(actividad));
+            }
+        }
+        JOptionPane.showMessageDialog(null, getMensajeFinal(exito));
+        dispose();
     }
 
     /**

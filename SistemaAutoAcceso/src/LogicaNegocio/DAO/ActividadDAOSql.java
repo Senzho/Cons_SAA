@@ -330,8 +330,9 @@ public class ActividadDAOSql implements ActividadDAO{
         return eliminada;
     }
     /**
-     * 
-     * @return 
+     * El método regresa un identificador entero para una nueva actividad.
+     * @return ultimoId, identificador de nueva actividad, si no hay actividades, regresa 1, en el caso contrario regresa
+     * el id de la última actividad más 1. En caso de regresar 0, significará que no logró acceder a los registros.
      */
     @Override
     public int getUltimoId(){

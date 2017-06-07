@@ -1,1 +1,0 @@
-LogicaNegocio.Entidades.ActividadRegistrada

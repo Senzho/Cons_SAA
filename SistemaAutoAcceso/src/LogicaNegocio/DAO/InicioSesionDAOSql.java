@@ -3,6 +3,7 @@ package LogicaNegocio.DAO;
 import AccesoDatos.ConexionSQL;
 import LogicaNegocio.Entidades.UsuarioSistema;
 import LogicaNegocio.Logica.CodigoUsuario;
+import LogicaNegocio.Logica.Hash;
 import LogicaNegocio.Logica.UsuarioEncontrado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InicioSesionDAOSql implements InicioSesionDAO{
+    /**
+     * El método busca el usuario solicitado.
+     * @param usuario, el usuario ingresado.
+     * @param contrasena, la contraseña ingresada.
+     * @return usuarioEncontrado, regresa un objeto del tipo UsuarioEncontrado, que contiene un código de autenticación
+     * del usuario, un objeto del tipo UsuarioSistema y el tipo de usuario. En caso de no encontrar una coincidencia, 
+     * regresará un código de usuarioInexistente.
+     */
     @Override
     public UsuarioEncontrado buscarUsuario(String usuario, String contrasena) {
         UsuarioEncontrado usuarioEncontrado = null;
@@ -27,7 +36,9 @@ public class InicioSesionDAOSql implements InicioSesionDAO{
             if (resultadoConsulta.first()){
                 int idUsuario;
                 int tipo;
-                if (resultadoConsulta.getString(2).equals(usuario) && resultadoConsulta.getString(3).equals(contrasena)){
+                Hash hash = new Hash();
+                String hashContrasena = hash.hash(contrasena);
+                if (resultadoConsulta.getString(2).equals(usuario) && resultadoConsulta.getString(3).equals(hashContrasena)){
                     idUsuario = resultadoConsulta.getInt(1);
                     usuarioSistema = new UsuarioSistema(idUsuario, usuario, contrasena);
                     tipo = resultadoConsulta.getInt(4);
