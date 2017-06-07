@@ -56,7 +56,7 @@ public class AsesorDAOSql implements AsesorDAO{
      */
     @Override
     public Asesor getAsesorId(int idUsuarioSistema){
-         Asesor asesor = null;
+        Asesor asesor = null;
         ConexionSQL conexionSql = new ConexionSQL();
         Connection conexion = conexionSql.getConexion();
         try{

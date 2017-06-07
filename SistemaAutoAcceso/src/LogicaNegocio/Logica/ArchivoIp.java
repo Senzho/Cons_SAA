@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class ArchivoIp {
-    private final String NOMBRE_ARCHIVO = "C:/ipconf.sa";
+    private final String NOMBRE_ARCHIVO = "/ipconf.sa";
     private final String DIRECCION_DEFAULT = "localhost";
     
     public boolean archivoExiste(){

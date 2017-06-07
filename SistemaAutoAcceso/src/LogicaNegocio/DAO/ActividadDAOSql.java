@@ -286,8 +286,7 @@ public class ActividadDAOSql implements ActividadDAO{
             orden.setString(1, actividad.getDatosActividad().getNombreActividad());
             orden.setDate(2, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaInicio().toString()));
             orden.setDate(3, java.sql.Date.valueOf(actividad.getDatosActividad().getFechaFin().toString()));
-            String cu = actividad.getDatosActividad().getCupo();
-            orden.setString(4, cu);
+            orden.setString(4, actividad.getDatosActividad().getCupo());
             orden.setInt(5, actividad.getDatosExperiencia().getSeccion());
             orden.setInt(6, actividad.getDatosExperiencia().getModulo());
             orden.setString(7, actividad.getDatosExperiencia().getNumeroPersonal());

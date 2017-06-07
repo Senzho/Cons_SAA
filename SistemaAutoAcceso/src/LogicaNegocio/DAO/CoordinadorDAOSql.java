@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 public class CoordinadorDAOSql implements CoordinadorDAO{
     /**
-     * metodo de tipo Coordinador que recibe como parametro un  tipo entero que funciona como identificador 
-     * de un objeto tipo Coordiandor
+     * Metodo de tipo Coordinador que recibe como parametro un  tipo entero que funciona como identificador 
+     * de un objeto tipo Coordiandor.
      * @param idUsuarioSistema identifiador de tipo entero que funciona para la busqueda de un objeto tipo Coordinador
      * @return coordinador objeto tipo coordinador buscado a partir del parametro de tipo entero idUsuarioSistema
      */

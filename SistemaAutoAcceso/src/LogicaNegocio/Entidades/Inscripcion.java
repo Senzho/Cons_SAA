@@ -1,7 +1,5 @@
 package LogicaNegocio.Entidades;
 
-import java.util.ArrayList;
-
 public class Inscripcion {
     private int idInscripcion;
     private String estadoInscripcion;

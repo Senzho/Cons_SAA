@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class InscripcionDAOSql implements InscripcionDAO {
     /**
-     * El metodo getListaInscripciones() de tipo ArrayList<Inscripcion> regresa todas las inscripciones de un 
+     * El metodo de tipo ArrayList<Inscripcion> regresa todas las inscripciones de un 
      * usuario mediante su atributo de tipo String matricula
      * @param matricula parametro de tipo String perteneciente un objeto de tipo Usuario que funciona como identificador 
      * para la busqueda de las inscripciones relacionadas con este parametro

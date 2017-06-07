@@ -1,20 +1,18 @@
 package LogicaNegocio.DAO;
 
 import AccesoDatos.ConexionSQL;
-import LogicaNegocio.Entidades.Inscripcion;
 import LogicaNegocio.Entidades.Usuario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class UsuarioDAOSql implements UsuarioDAO{
     /**
-     * El metodo getUsuario() de tipo Usuario funciona para retornar un objeto del tipo Usuario que este relacionado con
+     * El metodo de tipo Usuario funciona para retornar un objeto del tipo Usuario que este relacionado con
      * el parametro de tipo string recibido (matricula)
      * @param matricula parametro de tipo String perteneciente a un objeto de tupo Usuario y que funciona como identificador
      * para la busqueda de los datos relacionados con este parametro
